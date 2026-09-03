@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live fleet track record</title>
+<style>
+  :root {
+    color-scheme: light;
+    --surface-1: #fcfcfb;
+    --surface-2: #f2f2f0;
+    --border: #dededa;
+    --text-primary: #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted: #77766f;
+    --series-1: #2a78d6;
+    --series-1-soft: rgba(42, 120, 214, 0.10);
+    --good: #0ca30c;
+    --critical: #d03b3b;
+    --backfill: rgba(119, 118, 111, 0.09);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --surface-1: #1a1a19;
+      --surface-2: #232322;
+      --border: #383836;
+      --text-primary: #ffffff;
+      --text-secondary: #c3c2b7;
+      --text-muted: #94938a;
+      --series-1: #3987e5;
+      --series-1-soft: rgba(57, 135, 229, 0.14);
+      --good: #0ca30c;
+      --critical: #d03b3b;
+      --backfill: rgba(195, 194, 183, 0.08);
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --surface-1: #1a1a19;
+    --surface-2: #232322;
+    --border: #383836;
+    --text-primary: #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted: #94938a;
+    --series-1: #3987e5;
+    --series-1-soft: rgba(57, 135, 229, 0.14);
+    --good: #0ca30c;
+    --critical: #d03b3b;
+    --backfill: rgba(195, 194, 183, 0.08);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--surface-1);
+    color: var(--text-primary);
+    font: 15px/1.55 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 40px 20px 72px; }
+
+  header h1 { font-size: 27px; line-height: 1.2; margin: 0 0 6px; letter-spacing: -0.01em; }
+  header .sub { color: var(--text-secondary); margin: 0 0 4px; }
+  header .stamp { color: var(--text-muted); font-size: 13px; margin: 0; }
+
+  .notice {
+    margin: 26px 0 30px; padding: 16px 18px;
+    border: 1px solid var(--border); border-left: 3px solid var(--text-muted);
+    border-radius: 6px; background: var(--surface-2);
+  }
+  .notice h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.07em;
+    color: var(--text-muted); margin: 0 0 10px; font-weight: 600; }
+  .notice ul { margin: 0; padding-left: 18px; color: var(--text-secondary); }
+  .notice li { margin: 5px 0; }
+  .notice strong { color: var(--text-primary); font-weight: 600; }
+
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 0 0 30px; }
+  .tile { border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; }
+  .tile .label { font-size: 12px; color: var(--text-muted); text-transform: uppercase;
+    letter-spacing: 0.06em; margin-bottom: 7px; }
+  .tile .value { font-size: 25px; font-weight: 600; letter-spacing: -0.015em;
+    font-variant-numeric: tabular-nums; line-height: 1.1; }
+  .tile .foot { font-size: 12px; color: var(--text-muted); margin-top: 5px;
+    font-variant-numeric: tabular-nums; }
+  .pos { color: var(--good); } .neg { color: var(--critical); }
+
+  section { margin-top: 34px; }
+  section h2.title { font-size: 17px; margin: 0 0 2px; }
+  section p.caption { color: var(--text-secondary); font-size: 13px; margin: 0 0 14px; }
+
+  .chart-scroll { overflow-x: auto; }
+  .chart-scroll svg { display: block; min-width: 620px; width: 100%; height: auto; }
+  .grid line { stroke: var(--border); stroke-width: 1; }
+  .axis text { fill: var(--text-muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+  .series { fill: none; stroke: var(--series-1); stroke-width: 2;
+    stroke-linejoin: round; stroke-linecap: round; }
+  .area { fill: var(--series-1-soft); }
+  .endcap { fill: var(--series-1); stroke: var(--surface-1); stroke-width: 2; }
+  .endlabel { fill: var(--text-primary); font-size: 12px; font-weight: 600;
+    font-variant-numeric: tabular-nums; }
+  .backfill-band { fill: var(--backfill); }
+  .divider { stroke: var(--text-muted); stroke-width: 1; stroke-dasharray: 4 4; }
+  .phase { fill: var(--text-muted); font-size: 11px; letter-spacing: 0.04em; }
+  .crosshair { stroke: var(--text-muted); stroke-width: 1; }
+  .hover-dot { fill: var(--series-1); stroke: var(--surface-1); stroke-width: 2; }
+
+  .tip { position: absolute; pointer-events: none; opacity: 0; transition: opacity .1s;
+    background: var(--surface-1); border: 1px solid var(--border); border-radius: 6px;
+    padding: 7px 10px; font-size: 12px; box-shadow: 0 3px 12px rgba(0,0,0,.14);
+    white-space: nowrap; z-index: 5; }
+  .tip .t-time { color: var(--text-muted); margin-bottom: 3px; }
+  .tip .t-val { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .chart-holder { position: relative; }
+
+  .table-scroll { overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; min-width: 620px; }
+  th { text-align: left; font-weight: 600; color: var(--text-muted); font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.06em; padding: 10px 12px;
+    border-bottom: 1px solid var(--border); white-space: nowrap; }
+  td { padding: 9px 12px; border-bottom: 1px solid var(--border); }
+  table.trades td { white-space: nowrap; }
+  tr:last-child td { border-bottom: 0; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .tag { color: var(--text-muted); font-size: 12px; }
+  .muted-row td { color: var(--text-muted); }
+  .note { color: var(--text-muted); font-size: 12px; display: block; margin-top: 2px; }
+
+  footer { margin-top: 44px; padding-top: 22px; border-top: 1px solid var(--border);
+    color: var(--text-secondary); font-size: 13px; }
+  footer a { color: var(--series-1); }
+  .err { color: var(--critical); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Live fleet track record</h1>
+    <p class="sub">24 automated systems, one live account. Every closed trade since
+      30 August 2026, win or lose.</p>
+    <p class="stamp" id="stamp">Loading…</p>
+  </header>
+
+  <div class="notice">
+    <h2>Before you read the numbers</h2>
+    <ul>
+      <li><strong>This is days of data, not years.</strong> Nothing here is
+        statistically meaningful yet.</li>
+      <li><strong>The account is small</strong> — around £1,250 at the open.
+        Percentages on an account this size swing hard and do not transfer to a
+        larger one. Read the £ column.</li>
+      <li><strong>The shaded stretch was backfilled</strong> — already known when
+        this page went up. Judge the unshaded part.</li>
+      <li><strong>30 August is not the account's inception.</strong> The account
+        opened in November 2025 and has a losing history behind it, including a
+        drawdown through July and August 2026.</li>
+      <li><strong>Open positions are excluded from realised P&amp;L</strong> and can
+        still reverse.</li>
+    </ul>
+  </div>
+
+  <div class="tiles" id="tiles"></div>
+
+  <section>
+    <h2 class="title">Account balance</h2>
+    <p class="caption">Stamped by the broker after every transaction — not
+      reconstructed from trade P&amp;L. Closed trades only; open positions are not
+      in this line.</p>
+    <div class="chart-holder">
+      <div class="chart-scroll" id="chart-scroll"></div>
+      <div class="tip" id="tip"></div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="title">Every closed trade</h2>
+    <p class="caption">Nothing filtered. Broker trade IDs included so any row can be
+      checked against the account. Most orders reach the broker without a bot tag,
+      which is why there is no per-system P&amp;L split — see the method notes.</p>
+    <div class="table-scroll"><table class="trades" id="trades">
+      <thead><tr>
+        <th>Closed (UTC)</th><th>Instrument</th><th>Side</th>
+        <th class="num">Entry</th><th class="num">Exit</th>
+        <th class="num">P&amp;L</th><th>Trade ID</th><th>Bot tag</th>
+      </tr></thead>
+      <tbody><tr><td colspan="8">Loading…</td></tr></tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2 class="title">The roster</h2>
+    <p class="caption" id="roster-caption">The complete list. There is no second
+      account, no paper sleeve, and nothing excluded from the record above.</p>
+    <div class="table-scroll"><table id="roster">
+      <thead><tr>
+        <th>System</th><th>Instrument</th><th>Mechanism</th><th class="num">Risk cap</th>
+      </tr></thead>
+      <tbody><tr><td colspan="4">Loading…</td></tr></tbody>
+    </table></div>
+    <div id="changes"></div>
+  </section>
+
+  <footer>
+    <p><strong>Verify it yourself:</strong>
+      <a href="data/closed_trades.csv">closed_trades.csv</a> ·
+      <a href="data/equity.csv">equity.csv</a> ·
+      <a href="data/summary.json">summary.json</a> ·
+      <a href="data/roster.json">roster.json</a></p>
+    <p>This repository is append-only: every refresh is a timestamped commit, so a
+      quietly-deleted losing day would show up in the diff. Read the commit history,
+      not just this page.</p>
+    <p>A personal engineering project. Not investment advice, not a solicitation,
+      not a signal service.</p>
+  </footer>
+</div>
+
+<script>
+const GBP = n => (n < 0 ? "−£" : "£") + Math.abs(n).toLocaleString("en-GB",
+  { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const signed = n => (n > 0 ? "+" : n < 0 ? "−" : "") + "£" +
+  Math.abs(n).toLocaleString("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const cls = n => n > 0 ? "pos" : n < 0 ? "neg" : "";
+const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g,
+  c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const fmtDay = t => new Date(t).toLocaleDateString("en-GB",
+  { day: "numeric", month: "short", timeZone: "UTC" });
+const fmtFull = t => new Date(t).toLocaleString("en-GB",
+  { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "UTC" }) + " UTC";
+
+function parseCSV(text) {
+  const lines = text.trim().split(/\r?\n/);
+  const head = lines[0].split(",");
+  return lines.slice(1).map(l => {
+    const cells = l.split(",");
+    const o = {};
+    head.forEach((h, i) => o[h] = cells[i]);
+    return o;
+  });
+}
+
+async function load() {
+  let summary, equity, trades, meta, roster;
+  try {
+    const [s, e, t, m, r] = await Promise.all([
+      fetch("data/summary.json").then(r => r.json()),
+      fetch("data/equity.csv").then(r => r.text()),
+      fetch("data/closed_trades.csv").then(r => r.text()),
+      fetch("data/meta.json").then(r => r.ok ? r.json() : {}).catch(() => ({})),
+      fetch("data/roster.json").then(r => r.ok ? r.json() : null).catch(() => null),
+    ]);
+    summary = s; equity = parseCSV(e); trades = parseCSV(t); meta = m || {}; roster = r;
+  } catch (err) {
+    document.getElementById("stamp").innerHTML =
+      '<span class="err">Could not load the data files.</span>';
+    return;
+  }
+
+  document.getElementById("stamp").textContent =
+    "Record opens " + fmtFull(summary.record_start) +
+    " · last refreshed " + fmtFull(summary.generated_at);
+
+  const realised = summary.realised_pl;
+  const unreal = summary.unrealised_pl;
+  const tiles = [
+    { label: "Realised P&L", value: signed(realised), cls: cls(realised),
+      foot: summary.closed_trades + " closed trades" },
+    { label: "Open positions", value: signed(unreal), cls: cls(unreal),
+      foot: summary.open_trades + " still running, can reverse" },
+    { label: "Win rate", value: summary.win_rate + "%",
+      foot: summary.wins + " up · " + summary.losses + " down" },
+    { label: "Account balance", value: GBP(summary.balance),
+      foot: "opened at " + GBP(summary.opening_balance) },
+  ];
+  document.getElementById("tiles").innerHTML = tiles.map(t => `
+    <div class="tile">
+      <div class="label">${t.label}</div>
+      <div class="value ${t.cls || ""}">${t.value}</div>
+      <div class="foot">${t.foot}</div>
+    </div>`).join("");
+
+  drawChart(equity, meta);
+
+  document.querySelector("#trades tbody").innerHTML = trades.slice().reverse().map(r => {
+    const pl = parseFloat(r.realised_pl_gbp);
+    return `<tr>
+      <td>${fmtFull(r.close_time)}</td>
+      <td>${esc(r.instrument)}</td>
+      <td>${esc(r.direction)}</td>
+      <td class="num">${esc(r.entry_price) || "—"}</td>
+      <td class="num">${esc(r.exit_price) || "—"}</td>
+      <td class="num ${cls(pl)}">${signed(pl)}</td>
+      <td class="tag">${esc(r.broker_trade_id)}</td>
+      <td class="tag">${esc(r.bot_tag) || "—"}</td>
+    </tr>`;
+  }).join("");
+
+  if (roster) renderRoster(roster);
+}
+
+function renderRoster(roster) {
+  document.querySelector("#roster tbody").innerHTML = roster.systems.map(s => {
+    const cap = s.risk_cap_pct === null ? "vol-targeted"
+              : s.risk_cap_pct === 0 ? "0% — idle"
+              : s.risk_cap_pct + "%";
+    return `<tr${s.risk_cap_pct === 0 ? ' class="muted-row"' : ""}>
+      <td>${esc(s.name)}</td>
+      <td class="tag">${esc(s.instrument)}</td>
+      <td>${esc(s.mechanism)}${s.note ? `<span class="note">${esc(s.note)}</span>` : ""}</td>
+      <td class="num">${cap}</td>
+    </tr>`;
+  }).join("");
+
+  document.getElementById("roster-caption").innerHTML =
+    "The complete list, pulled from the trading host on " +
+    fmtDay(roster.pulled_at) + ". Risk cap is what each service actually runs, " +
+    "read from its own launch arguments — not from a planning document. " +
+    "There is no second account and no paper sleeve.";
+
+  if (roster.changes && roster.changes.length) {
+    document.getElementById("changes").innerHTML = `
+      <h2 class="title" style="margin-top:26px">Roster changes since the record opened</h2>
+      <p class="caption">Every change gets a dated row, in the commit that makes it.
+        That is the point of publishing the roster.</p>
+      <div class="table-scroll"><table>
+        <thead><tr><th>Date</th><th>System</th><th>Change</th></tr></thead>
+        <tbody>${roster.changes.map(c => `<tr>
+          <td class="tag">${esc(c.date)}</td>
+          <td>${esc(c.name)} <span class="tag">${esc(c.instrument)}</span></td>
+          <td>${esc(c.change)}${c.note ? `<span class="note">${esc(c.note)}</span>` : ""}</td>
+        </tr>`).join("")}</tbody>
+      </table></div>`;
+  }
+}
+
+function drawChart(rows, meta) {
+  const W = 960, H = 360, mL = 62, mR = 66, mT = 26, mB = 34;
+  const pts = rows.map(r => ({ t: Date.parse(r.time), v: parseFloat(r.balance) }))
+                  .filter(p => isFinite(p.t) && isFinite(p.v));
+  if (!pts.length) return;
+
+  const t0 = pts[0].t, t1 = pts[pts.length - 1].t;
+  const vals = pts.map(p => p.v);
+  let lo = Math.min(...vals), hi = Math.max(...vals);
+  const pad = (hi - lo) * 0.18 || 20;
+  lo -= pad; hi += pad;
+
+  const X = t => mL + (t1 === t0 ? 0 : (t - t0) / (t1 - t0)) * (W - mL - mR);
+  const Y = v => mT + (1 - (v - lo) / (hi - lo)) * (H - mT - mB);
+
+  const ticks = [];
+  const step = niceStep((hi - lo) / 4);
+  for (let v = Math.ceil(lo / step) * step; v <= hi; v += step) ticks.push(v);
+
+  const days = [];
+  const d = new Date(t0);
+  d.setUTCHours(0, 0, 0, 0);
+  for (; d.getTime() <= t1; d.setUTCDate(d.getUTCDate() + 1)) {
+    if (d.getTime() >= t0) days.push(d.getTime());
+  }
+
+  const line = pts.map((p, i) => (i ? "L" : "M") + X(p.t).toFixed(1) + " " + Y(p.v).toFixed(1)).join(" ");
+  const area = line + ` L${X(t1).toFixed(1)} ${Y(lo).toFixed(1)} L${X(t0).toFixed(1)} ${Y(lo).toFixed(1)} Z`;
+
+  const pub = meta.published_at ? Date.parse(meta.published_at) : null;
+  const split = pub && pub > t0 && pub < t1;
+  const bandEnd = split ? X(pub) : (W - mR);
+  const last = pts[pts.length - 1];
+
+  const svg = `
+  <svg viewBox="0 0 ${W} ${H}" role="img"
+       aria-label="Account balance from ${fmtDay(t0)} to ${fmtDay(t1)}">
+    <rect class="backfill-band" x="${X(t0)}" y="${mT}"
+          width="${(bandEnd - X(t0)).toFixed(1)}" height="${H - mT - mB}"></rect>
+    <g class="grid">
+      ${ticks.map(v => `<line x1="${mL}" x2="${W - mR}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}"></line>`).join("")}
+    </g>
+    <g class="axis">
+      ${ticks.map(v => `<text x="${mL - 10}" y="${(Y(v) + 4).toFixed(1)}" text-anchor="end">£${v.toFixed(0)}</text>`).join("")}
+      ${days.map(dd => `<text x="${X(dd).toFixed(1)}" y="${H - 12}" text-anchor="middle">${fmtDay(dd)}</text>`).join("")}
+    </g>
+    ${split ? `
+      <line class="divider" x1="${X(pub).toFixed(1)}" x2="${X(pub).toFixed(1)}" y1="${mT}" y2="${H - mB}"></line>
+      <text class="phase" x="${(X(t0) + 6).toFixed(1)}" y="${mT + 14}">BACKFILLED — already known</text>
+      <text class="phase" x="${(X(pub) + 6).toFixed(1)}" y="${mT + 14}">FORWARD — unknown at publication</text>
+    ` : `<text class="phase" x="${(X(t0) + 6).toFixed(1)}" y="${mT + 14}">BACKFILLED — already known at publication</text>`}
+    <path class="area" d="${area}"></path>
+    <path class="series" d="${line}"></path>
+    <circle class="endcap" cx="${X(last.t).toFixed(1)}" cy="${Y(last.v).toFixed(1)}" r="4.5"></circle>
+    <text class="endlabel" x="${(X(last.t) + 10).toFixed(1)}" y="${(Y(last.v) + 4).toFixed(1)}">£${last.v.toFixed(0)}</text>
+    <line class="crosshair" id="cross" x1="0" x2="0" y1="${mT}" y2="${H - mB}" opacity="0"></line>
+    <circle class="hover-dot" id="hdot" r="5" opacity="0"></circle>
+    <rect id="capture" x="${mL}" y="${mT}" width="${W - mL - mR}" height="${H - mT - mB}"
+          fill="transparent" style="cursor:crosshair"></rect>
+  </svg>`;
+
+  const holder = document.getElementById("chart-scroll");
+  holder.innerHTML = svg;
+
+  const svgEl = holder.querySelector("svg");
+  const cross = svgEl.querySelector("#cross");
+  const hdot = svgEl.querySelector("#hdot");
+  const tip = document.getElementById("tip");
+
+  svgEl.querySelector("#capture").addEventListener("mousemove", ev => {
+    const box = svgEl.getBoundingClientRect();
+    const sx = (ev.clientX - box.left) * (W / box.width);
+    let best = pts[0], bd = Infinity;
+    for (const p of pts) {
+      const dd = Math.abs(X(p.t) - sx);
+      if (dd < bd) { bd = dd; best = p; }
+    }
+    const px = X(best.t), py = Y(best.v), scale = box.width / W;
+    cross.setAttribute("x1", px); cross.setAttribute("x2", px);
+    cross.setAttribute("opacity", "0.5");
+    hdot.setAttribute("cx", px); hdot.setAttribute("cy", py);
+    hdot.setAttribute("opacity", "1");
+    tip.style.opacity = "1";
+    tip.innerHTML = `<div class="t-time">${fmtFull(best.t)}</div>
+                     <div class="t-val">${GBP(best.v)}</div>`;
+    let left = px * scale + 14;
+    if (left + tip.offsetWidth > box.width) left = px * scale - tip.offsetWidth - 14;
+    tip.style.left = left + "px";
+    tip.style.top = (py * scale - 10) + "px";
+  });
+  svgEl.querySelector("#capture").addEventListener("mouseleave", () => {
+    cross.setAttribute("opacity", "0");
+    hdot.setAttribute("opacity", "0");
+    tip.style.opacity = "0";
+  });
+}
+
+function niceStep(raw) {
+  const mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  const n = raw / mag;
+  return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 5 ? 5 : 10) * mag;
+}
+
+load();
+</script>
+</body>
+</html>
