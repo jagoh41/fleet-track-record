@@ -1,11 +1,11 @@
 {
   "record_start": "2026-08-30T00:00:00Z",
-  "generated_at": "2026-09-03T16:23:13Z",
+  "generated_at": "2026-09-03T16:42:40Z",
   "currency": "GBP",
   "opening_balance": 1251.78,
   "balance": 1613.67,
-  "nav": 1702.95,
-  "unrealised_pl": 89.28,
+  "nav": 1714.01,
+  "unrealised_pl": 100.34,
   "realised_pl": 362.05,
   "financing": -7.69,
   "closed_trades": 20,
@@ -18,44 +18,9 @@
   "largest_win": 181.41,
   "largest_loss": -27.19,
   "open_trades": 9,
-  "open_unrealised": 89.26,
+  "open_unrealised": 100.33,
   "tagged_trades": 5,
-  "capital_flows": [
-    {
-      "time": "2026-08-13T00:12:36Z",
-      "amount": -100.0,
-      "reason": "CLIENT_FUNDING"
-    },
-    {
-      "time": "2026-08-16T21:35:25Z",
-      "amount": -180.0,
-      "reason": "CLIENT_FUNDING"
-    },
-    {
-      "time": "2026-08-18T00:31:53Z",
-      "amount": -151.0,
-      "reason": "CLIENT_FUNDING"
-    },
-    {
-      "time": "2026-08-18T00:32:26Z",
-      "amount": -151.0,
-      "reason": "CLIENT_FUNDING"
-    },
-    {
-      "time": "2026-08-18T06:38:45Z",
-      "amount": 151.0,
-      "reason": "ADJUSTMENT"
-    },
-    {
-      "time": "2026-08-18T06:39:40Z",
-      "amount": 151.0,
-      "reason": "ADJUSTMENT"
-    },
-    {
-      "time": "2026-08-18T08:41:37Z",
-      "amount": -151.0,
-      "reason": "CLIENT_FUNDING"
-    }
-  ],
-  "return_pct_on_opening": 36.04
+  "capital_flows_in_window": [],
+  "realised_return_pct_on_opening": 28.92,
+  "nav_return_pct_on_opening": 36.93
 }
