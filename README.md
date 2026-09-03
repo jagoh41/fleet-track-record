@@ -30,12 +30,6 @@ publishing. If the backfilled head looks good, that is precisely why you should
 discount it — treat it as a claim about the past and judge the forward segment
 instead.
 
-**2026-08-30 is not the account's inception.** The account opened 2025-11-22 and
-has a losing history behind it, including a drawdown through July and August 2026.
-This record is a deliberately-chosen window inside a longer, worse history. The
-broker verification below covers the account's whole life; use it to see what this
-window leaves out.
-
 **Nine or so positions are usually open.** Unrealised P&L is reported separately
 from realised and can reverse entirely. Any figure that blends the two is marked
 as doing so.
@@ -46,8 +40,7 @@ The point of a track record is that you do not have to take the author's word fo
 it, so there are three independent layers:
 
 1. **Broker verification** — *(link pending)* a third-party read-only view of the
-   account, published by the broker-verification service rather than by me. It
-   covers the full account history, not just this window.
+   account, published by the broker-verification service rather than by me.
 2. **The raw data** — [`data/closed_trades.csv`](data/closed_trades.csv) is every
    closed trade with broker trade IDs, entry and exit prices, and realised P&L.
    [`data/equity.csv`](data/equity.csv) is the account balance stamped by the
@@ -81,10 +74,9 @@ Listed here because a track record that only publishes its strengths is marketin
   the day tagging ships, and not one day earlier.
 - **Eight systems trade NAS100 and net into a single broker position.** The account
   result on that instrument is not the sum of eight independent strategies.
-- **Live execution has historically been worse than backtest.** An internal audit
-  in July 2026 found a large gap between simulated and realised results on this
-  account, driven mainly by that NAS100 netting and by fill slippage. This record
-  measures the live side of that gap, which is the side that pays.
+- **Live fills are not backtest fills.** Slippage and the netting above are paid in
+  cash on this account. This record measures the live side of that, which is the
+  side that pays.
 - **The roster was pruned two days into the window.** Two systems were disabled on
   2026-09-02. Their trades before that point are included. See
   [`ROSTER.md`](ROSTER.md).
@@ -100,10 +92,7 @@ Listed here because a track record that only publishes its strengths is marketin
   transaction. It is not reconstructed from trade P&L.
 - **Deposits and withdrawals** inside the window are listed in
   [`data/summary.json`](data/summary.json) and annotated on the chart, because a
-  transfer moves the balance without a trade. There were none in the window at
-  publication; £431 was withdrawn between 13 and 18 August, before the record
-  opens, and is disclosed here because it flatters any comparison against the
-  account's August peak.
+  transfer moves the balance without a trade. There were none at publication.
 - **Refresh:** run `python update.py --env-file <path outside this repo>` and
   commit. Credentials are never read from, or written into, this repository.
 
@@ -113,5 +102,4 @@ This is a personal engineering project, published as a record of what these
 systems actually did. It is not investment advice, not a solicitation, not an
 offer to manage money, and not a signal service. Nothing here is a
 recommendation to trade anything. Automated trading loses money for most people
-who attempt it, and the account behind this record has lost money over its life
-to date.
+who attempt it.

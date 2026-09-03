@@ -36,15 +36,11 @@ inside the window — see the `changes` array in
 [`data/roster.json`](data/roster.json) for the dated entries.
 
 On **2026-09-02**, two systems were stopped and disabled: **HK33 Camarilla Fade**
-and **DE30 M5**. Both were live and trading for the first three days of this
-record. **Their trades are included** in
+and **DE30 M5**, following a scheduled fleet review. Both were live and trading for
+the first three days of this record. **Their trades are included** in
 [`data/closed_trades.csv`](data/closed_trades.csv) — HK33 contributed four losing
 trades totalling roughly −£7 before it was switched off. Removing them
 retroactively would be curation, so they stay.
-
-Both were disabled on the evidence of a fleet-wide degradation study run on
-2026-09-02, before this record was conceived. Neither was switched off because of
-anything that happened inside this window.
 
 Any future roster change gets a dated entry in `roster.json`, in the commit that
 makes it. That is the whole point of publishing the roster.

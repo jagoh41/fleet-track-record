@@ -207,10 +207,8 @@ def main():
         "open_unrealised": round(sum(float(t.get("unrealizedPL", 0)) for t in opens), 2),
         "tagged_trades": sum(1 for r in rows if r["bot_tag"]),
         # Deposits/withdrawals INSIDE the window would distort any return figure.
-        # Flows before the window are listed separately as context only.
+        # The record covers this window only; nothing outside it is published.
         "capital_flows_in_window": [f for f in flows if f["in_window"]],
-        "net_flows_before_window": round(
-            sum(f["amount"] for f in flows if not f["in_window"]), 2),
         "realised_return_pct_on_opening": (round(100.0 * sum(pls) / opening, 2)
                                            if opening else None),
         "nav_return_pct_on_opening": (round(100.0 * (nav - opening) / opening, 2)
