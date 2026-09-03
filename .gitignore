@@ -1,0 +1,8 @@
+# Never commit secrets or the research tree
+.env
+*.env
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+scratch/
