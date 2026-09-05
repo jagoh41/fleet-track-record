@@ -18,9 +18,13 @@ fraction of account equity risked between entry and stop on a single position.
 **MR UK100 runs at a 0% cap.** It is live, it evaluates signals, and it will not
 size a position. It is listed because it is running, not because it trades.
 
-**Eight systems share NAS100.** They net into a single broker position, which means
-the account's realised P&L on that instrument is not the sum of eight independent
-strategies. This is a structural feature of the account, not a reporting artifact.
+**Eight systems share NAS100, and the index sleeve can crowd out the rest.** The
+NAS100 systems net into a single broker position, so the account's realised P&L on
+that instrument is not the sum of eight independent strategies. More importantly,
+the index systems together can use most of the account's margin during the US
+session, and orders that arrive after that point — usually the metals systems —
+are refused by the broker. `margin_refusals` in `data/summary.json` counts those
+refusals inside the record window.
 
 **Gold Trend TSMOM has no fixed risk cap.** It sizes to an 8% annualised volatility
 target and only trades above £1,000 NAV, so it is not comparable to the per-trade

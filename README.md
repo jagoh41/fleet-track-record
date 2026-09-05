@@ -75,8 +75,15 @@ Listed here because a track record that only publishes its strengths is marketin
   exists to avoid. Account-level figures are the only ones that are fully
   verifiable, so account-level is all that is reported. Per-bot attribution starts
   the day tagging ships, and not one day earlier.
-- **Eight systems trade NAS100 and net into a single broker position.** The account
-  result on that instrument is not the sum of eight independent strategies.
+- **The index systems can exhaust the account's margin.** Eight of the 24 trade
+  NAS100 and several more trade other US indices; during the US session their
+  positions can use most of the account's margin at once. When that happens the
+  broker refuses later orders — typically the metals systems — for insufficient
+  margin. A refused order never becomes a trade, so it never appears in the
+  trade list: the record shows what the fleet *did*, not what it tried to do.
+  The count of in-window margin refusals is published in
+  [`data/summary.json`](data/summary.json) as `margin_refusals` so the effect is
+  measurable rather than asserted.
 - **Live fills are not backtest fills.** Slippage and the netting above are paid in
   cash on this account. This record measures the live side of that, which is the
   side that pays.
