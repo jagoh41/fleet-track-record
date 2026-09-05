@@ -161,6 +161,7 @@ def main():
     txns = broker.transactions(START - dt.timedelta(days=21), now)
     opening = None
     series, flows = [], []
+    margin_refusals = 0
     for t in txns:
         bal = t.get("accountBalance")
         when = ts(t.get("time"))
@@ -175,6 +176,11 @@ def main():
                           "amount": float(t.get("amount", 0)),
                           "reason": t.get("fundingReason", ""),
                           "in_window": when >= START})
+        # An order the broker refused for margin never becomes a trade, so the
+        # trade list cannot show it. Count them so the crowding-out is measurable.
+        if (t.get("type") == "ORDER_CANCEL" and t.get("reason") == "INSUFFICIENT_MARGIN"
+                and when >= START):
+            margin_refusals += 1
     if opening is None:
         opening = (float(acct.get("balance", 0))
                    - sum(float(t.get("realizedPL", 0)) for t in trades))
@@ -216,6 +222,7 @@ def main():
         # Deposits/withdrawals INSIDE the window would distort any return figure.
         # The record covers this window only; nothing outside it is published.
         "capital_flows_in_window": [f for f in flows if f["in_window"]],
+        "margin_refusals": margin_refusals,
         "realised_return_pct_on_opening": (round(100.0 * sum(pls) / opening, 2)
                                            if opening else None),
         "nav_return_pct_on_opening": (round(100.0 * (nav - opening) / opening, 2)

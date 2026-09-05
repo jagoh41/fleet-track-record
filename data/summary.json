@@ -1,6 +1,6 @@
 {
   "record_start": "2026-09-06T00:00:00Z",
-  "generated_at": "2026-09-05T13:28:08Z",
+  "generated_at": "2026-09-05T14:43:55Z",
   "currency": "GBP",
   "opening_balance": 2000.0,
   "balance": 2000.0,
@@ -21,6 +21,7 @@
   "open_unrealised": 0,
   "tagged_trades": 0,
   "capital_flows_in_window": [],
+  "margin_refusals": 0,
   "realised_return_pct_on_opening": 0.0,
   "nav_return_pct_on_opening": 0.0
 }
