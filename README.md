@@ -3,8 +3,10 @@
 A public, append-only record of 24 automated trading systems running on one live
 OANDA account.
 
-**The record opens 2026-08-30 and never moves.** Every closed trade from that
-moment on appears here, win or lose, with no bot excluded and no window
+**The record opens 2026-09-06 and never moves.** It tracks one broker account,
+`001-004-19806960-002`, which was funded on 2026-09-04 with £2,000.00 and had
+never placed a trade before this record began. Every closed trade from the
+opening moment on appears here, win or lose, with no bot excluded and no window
 re-chosen. The roster is published in [`ROSTER.md`](ROSTER.md) with the live risk
 cap each system actually runs.
 
@@ -18,17 +20,18 @@ cap each system actually runs.
 meaningful yet. A profit factor computed on twenty trades is a description of
 twenty trades, not evidence of an edge.
 
-**The account is small — roughly £1,250 at the open.** Percentage returns on an
+**The account is small — £2,000.00 at the open.** Percentage returns on an
 account this size swing violently and do not transfer to a larger one. The £
 column is the honest one; the % column is arithmetic.
 
-**The first days are backfilled.** The record starts 2026-08-30, but the page was
-published several days later, which means the opening stretch was already known
-when it went up. That segment is marked **backfilled** on the chart and in the
-data. Only trades after the publication marker were unknown at the moment of
-publishing. If the backfilled head looks good, that is precisely why you should
-discount it — treat it as a claim about the past and judge the forward segment
-instead.
+**The publication marker is the only line that matters.** `data/meta.json`
+carries `published_at`, set once when this repository first went public and
+never changed. Anything before that marker was already known when the page went
+up and is shaded **backfilled** on the chart; anything after it was unknown at
+the moment of publishing. If the marker precedes the account's first trade, the
+record is forward in its entirety and the shaded band is empty — check the
+marker against the first row of `data/closed_trades.csv` rather than taking
+that on trust.
 
 **Nine or so positions are usually open.** Unrealised P&L is reported separately
 from realised and can reverse entirely. Any figure that blends the two is marked
@@ -77,8 +80,9 @@ Listed here because a track record that only publishes its strengths is marketin
 - **Live fills are not backtest fills.** Slippage and the netting above are paid in
   cash on this account. This record measures the live side of that, which is the
   side that pays.
-- **The roster was pruned two days into the window.** Two systems were disabled on
-  2026-09-02. Their trades before that point are included. See
+- **The roster can change.** Any system added, removed or re-capped after the
+  record opened gets a dated entry in `data/roster.json` in the commit that makes
+  the change, and its trades up to that point stay in the record. See
   [`ROSTER.md`](ROSTER.md).
 
 ## Method

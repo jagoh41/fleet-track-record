@@ -19,7 +19,10 @@ from urllib.request import Request, urlopen
 from urllib.parse import urlencode
 
 # The public record starts here. Fixed at publication; never moves.
-START = dt.datetime(2026, 8, 30, 0, 0, tzinfo=dt.timezone.utc)
+START = dt.datetime(2026, 9, 6, 0, 0, tzinfo=dt.timezone.utc)
+# The record tracks exactly one broker account, pinned here so the data can
+# never silently follow a config change. This is an account id, not a credential.
+ACCOUNT = "001-004-19806960-002"
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(HERE, "data")
 
@@ -63,7 +66,7 @@ class Broker:
         self.base = ("https://api-fxpractice.oanda.com" if mode == "practice"
                      else "https://api-fxtrade.oanda.com")
         self.key = env["OANDA_API_KEY"]
-        self.acct = env["OANDA_ACCOUNT_ID"]
+        self.acct = ACCOUNT
 
     def get(self, path, params=None):
         url = self.base + path + ("?" + urlencode(params, doseq=True) if params else "")
@@ -115,8 +118,8 @@ def main():
     ap.add_argument("--env-file", help="path to a .env OUTSIDE this repo")
     args = ap.parse_args()
     env = load_env(args.env_file)
-    if not env.get("OANDA_API_KEY") or not env.get("OANDA_ACCOUNT_ID"):
-        sys.exit("missing OANDA_API_KEY / OANDA_ACCOUNT_ID")
+    if not env.get("OANDA_API_KEY"):
+        sys.exit("missing OANDA_API_KEY")
 
     broker = Broker(env)
     now = dt.datetime.now(dt.timezone.utc)
@@ -143,12 +146,16 @@ def main():
             "bot_tag": (t.get("clientExtensions") or {}).get("tag", ""),
         })
     os.makedirs(DATA, exist_ok=True)
-    if rows:
-        with open(os.path.join(DATA, "closed_trades.csv"), "w", newline="",
-                  encoding="utf-8") as f:
-            w = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
-            w.writeheader()
-            w.writerows(rows)
+    # Always rewrite, even with zero rows: a stale file from a previous run must
+    # never survive into a record that reports a different trade count.
+    fields = ["close_time", "open_time", "instrument", "direction", "units",
+              "entry_price", "exit_price", "realised_pl_" + lc, "financing_" + lc,
+              "broker_trade_id", "bot_tag"]
+    with open(os.path.join(DATA, "closed_trades.csv"), "w", newline="",
+              encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=fields)
+        w.writeheader()
+        w.writerows(rows)
 
     # ---- balance series, straight off the broker own stamps ----
     txns = broker.transactions(START - dt.timedelta(days=21), now)
