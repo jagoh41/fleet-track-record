@@ -138,7 +138,7 @@
   <header>
     <h1>Live fleet track record</h1>
     <p class="sub">24 automated systems, one live account. Every closed trade since
-      30 August 2026, win or lose.</p>
+      6 September 2026, win or lose.</p>
     <p class="stamp" id="stamp">Loading…</p>
   </header>
 
@@ -147,11 +147,11 @@
     <ul>
       <li><strong>This is days of data, not years.</strong> Nothing here is
         statistically meaningful yet.</li>
-      <li><strong>The account is small</strong> — around £1,250 at the open.
-        Percentages on an account this size swing hard and do not transfer to a
-        larger one. Read the £ column.</li>
-      <li><strong>The shaded stretch was backfilled</strong> — already known when
-        this page went up. Judge the unshaded part.</li>
+      <li><strong>The account is small</strong> — £2,000 at the open, and it had
+        never traded before this record began. Percentages on an account this size
+        swing hard and do not transfer to a larger one. Read the £ column.</li>
+      <li><strong>Anything left of the publication marker was already known</strong>
+        when this page went up, and is shaded. If nothing is shaded, nothing was.</li>
       <li><strong>Open positions are excluded from realised P&amp;L</strong> and can
         still reverse.</li>
     </ul>
@@ -264,8 +264,9 @@ async function load() {
       foot: summary.closed_trades + " closed trades" },
     { label: "Open positions", value: signed(unreal), cls: cls(unreal),
       foot: summary.open_trades + " still running, can reverse" },
-    { label: "Win rate", value: summary.win_rate + "%",
-      foot: summary.wins + " up · " + summary.losses + " down" },
+    { label: "Win rate", value: summary.win_rate == null ? "—" : summary.win_rate + "%",
+      foot: summary.closed_trades ? summary.wins + " up · " + summary.losses + " down"
+                                  : "no closed trades yet" },
     { label: "Account balance", value: GBP(summary.balance),
       foot: "opened at " + GBP(summary.opening_balance) },
   ];
@@ -278,7 +279,9 @@ async function load() {
 
   drawChart(equity, meta);
 
-  document.querySelector("#trades tbody").innerHTML = trades.slice().reverse().map(r => {
+  document.querySelector("#trades tbody").innerHTML = trades.length === 0
+    ? `<tr><td colspan="8" class="tag">No closed trades yet — the record opens ${fmtFull(summary.record_start)} and the first fill will appear here.</td></tr>`
+    : trades.slice().reverse().map(r => {
     const pl = parseFloat(r.realised_pl_gbp);
     return `<tr>
       <td>${fmtFull(r.close_time)}</td>
@@ -359,9 +362,13 @@ function drawChart(rows, meta) {
   const line = pts.map((p, i) => (i ? "L" : "M") + X(p.t).toFixed(1) + " " + Y(p.v).toFixed(1)).join(" ");
   const area = line + ` L${X(t1).toFixed(1)} ${Y(lo).toFixed(1)} L${X(t0).toFixed(1)} ${Y(lo).toFixed(1)} Z`;
 
+  // Three honest states for the publication marker: not yet published (everything
+  // visible is known now), published before the first data point (nothing was
+  // known: no band at all), or published mid-record (band up to the marker).
   const pub = meta.published_at ? Date.parse(meta.published_at) : null;
-  const split = pub && pub > t0 && pub < t1;
-  const bandEnd = split ? X(pub) : (W - mR);
+  const forwardOnly = pub !== null && pub <= t0;
+  const split = pub !== null && pub > t0 && pub < t1;
+  const bandEnd = forwardOnly ? X(t0) : split ? X(pub) : (W - mR);
   const last = pts[pts.length - 1];
 
   const svg = `
@@ -380,7 +387,9 @@ function drawChart(rows, meta) {
       <line class="divider" x1="${X(pub).toFixed(1)}" x2="${X(pub).toFixed(1)}" y1="${mT}" y2="${H - mB}"></line>
       <text class="phase" x="${(X(t0) + 6).toFixed(1)}" y="${mT + 14}">BACKFILLED — already known</text>
       <text class="phase" x="${(X(pub) + 6).toFixed(1)}" y="${mT + 14}">FORWARD — unknown at publication</text>
-    ` : `<text class="phase" x="${(X(t0) + 6).toFixed(1)}" y="${mT + 14}">BACKFILLED — already known at publication</text>`}
+    ` : forwardOnly
+      ? `<text class="phase" x="${(X(t0) + 6).toFixed(1)}" y="${mT + 14}">FORWARD — published ${fmtFull(pub)}, before the first trade</text>`
+      : `<text class="phase" x="${(X(t0) + 6).toFixed(1)}" y="${mT + 14}">${pub === null ? "NOT YET PUBLISHED — everything shown is known now" : "BACKFILLED — already known at publication"}</text>`}
     <path class="area" d="${area}"></path>
     <path class="series" d="${line}"></path>
     <circle class="endcap" cx="${X(last.t).toFixed(1)}" cy="${Y(last.v).toFixed(1)}" r="4.5"></circle>

@@ -31,16 +31,10 @@ positions can and do stack. There is no global risk governor beyond broker margi
 
 ## Roster changes since the record opened
 
-The record starts 2026-08-30. The roster has changed once since then, and it is
-inside the window — see the `changes` array in
-[`data/roster.json`](data/roster.json) for the dated entries.
-
-On **2026-09-02**, two systems were stopped and disabled: **HK33 Camarilla Fade**
-and **DE30 M5**, following a scheduled fleet review. Both were live and trading for
-the first three days of this record. **Their trades are included** in
-[`data/closed_trades.csv`](data/closed_trades.csv) — HK33 contributed four losing
-trades totalling roughly −£7 before it was switched off. Removing them
-retroactively would be curation, so they stay.
+The record starts 2026-09-06 with the 24 systems listed in
+[`data/roster.json`](data/roster.json). No system has been added, removed or
+re-capped since — the `changes` array there is empty, and it stays the single
+place a change is recorded.
 
 Any future roster change gets a dated entry in `roster.json`, in the commit that
 makes it. That is the whole point of publishing the roster.

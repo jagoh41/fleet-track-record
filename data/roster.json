@@ -28,8 +28,5 @@
     { "name": "USDCAD Capitulation Rev", "instrument": "USD_CAD", "mechanism": "Capitulation reversal", "risk_cap_pct": 2.0 },
     { "name": "NZD FalseBreak Short", "instrument": "NZD_USD", "mechanism": "False-breakout short", "risk_cap_pct": 6.0 }
   ],
-  "changes": [
-    { "date": "2026-09-02", "name": "HK33 Camarilla Fade", "instrument": "HK33_HKD", "change": "stopped and disabled", "note": "Disabled following a scheduled fleet review. Live and trading for the first three days of this record; its four losing trades (about -7 GBP) are included." },
-    { "date": "2026-09-02", "name": "DE30 M5", "instrument": "DE30_EUR", "change": "stopped and disabled", "note": "Disabled following the same review. Live for the first three days of this record; its trades are included." }
-  ]
+  "changes": []
 }
