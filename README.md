@@ -10,7 +10,7 @@ opening moment on appears here, win or lose, with no bot excluded and no window
 re-chosen. The roster is published in [`ROSTER.md`](ROSTER.md) with the live risk
 cap each system actually runs.
 
-📈 **[View the record →](https://USERNAME.github.io/REPO/)**
+📈 **[View the record →](https://jagoh41.github.io/fleet-track-record/)**
 
 ---
 
@@ -42,8 +42,10 @@ as doing so.
 The point of a track record is that you do not have to take the author's word for
 it, so there are three independent layers:
 
-1. **Broker verification** — *(link pending)* a third-party read-only view of the
-   account, published by the broker-verification service rather than by me.
+1. **Broker verification** — [the account on Myfxbook](https://www.myfxbook.com/members/jagoh41/live20from20september202026/12183574),
+   a third-party read-only view fed directly by the broker API rather than by me.
+   Myfxbook shows both its **track record** and **trading privileges** checks as
+   verified. It updates on its own schedule, so it can lag this page by a few hours.
 2. **The raw data** — [`data/closed_trades.csv`](data/closed_trades.csv) is every
    closed trade with broker trade IDs, entry and exit prices, and realised P&L.
    [`data/equity.csv`](data/equity.csv) is the account balance stamped by the
