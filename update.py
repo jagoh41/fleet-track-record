@@ -128,6 +128,13 @@ def main():
     lc = ccy.lower()
 
     # ---- closed trades ----
+    def bot_tag(t):
+        # The broker shows tag "0" (with an id/comment) on trades from several
+        # different systems: a shared bookkeeping stamp, not a bot identity.
+        # Report it as untagged so the tagged count means what it says.
+        tag = (t.get("clientExtensions") or {}).get("tag", "")
+        return "" if tag in ("", "0") else tag
+
     trades = sorted(broker.closed_trades(START), key=lambda t: ts(t["closeTime"]))
     rows = []
     for t in trades:
@@ -143,7 +150,7 @@ def main():
             "realised_pl_" + lc: "%.2f" % float(t.get("realizedPL", 0)),
             "financing_" + lc: "%.4f" % float(t.get("financing", 0)),
             "broker_trade_id": t.get("id", ""),
-            "bot_tag": (t.get("clientExtensions") or {}).get("tag", ""),
+            "bot_tag": bot_tag(t),
         })
     os.makedirs(DATA, exist_ok=True)
     # Always rewrite, even with zero rows: a stale file from a previous run must

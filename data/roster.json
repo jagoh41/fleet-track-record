@@ -1,32 +1,169 @@
 {
-  "pulled_at": "2026-09-03T16:10:00Z",
+  "pulled_at": "2026-09-08T13:05:12Z",
   "source": "systemctl list-units 'tradebot_*' --state=active on the trading host; risk caps read from each service's own launch arguments or config file",
-  "count": 24,
+  "count": 25,
   "systems": [
-    { "name": "BCO Brent Trend", "instrument": "BCO_USD", "mechanism": "Daily Donchian-10 breakout, chandelier trailing stop", "risk_cap_pct": 0.75 },
-    { "name": "WTICO WTI Trend", "instrument": "WTICO_USD", "mechanism": "Same family as Brent, separate parameters", "risk_cap_pct": 0.25 },
-    { "name": "DE30 Channel v9", "instrument": "DE30_EUR", "mechanism": "Intraday rolling-channel breakout, M1 source bars", "risk_cap_pct": 1.5 },
-    { "name": "NAS100 Channel v9", "instrument": "NAS100_USD", "mechanism": "Rolling-channel breakout, M5 source bars", "risk_cap_pct": 1.5 },
-    { "name": "US30 Channel v9", "instrument": "US30_USD", "mechanism": "Rolling-channel breakout, M1 source bars", "risk_cap_pct": 2.0 },
-    { "name": "SPX500 Channel v6 Rebuild", "instrument": "SPX500_USD", "mechanism": "Rolling-channel breakout, M5 source bars", "risk_cap_pct": 1.5 },
-    { "name": "NAS100 Swing Chan", "instrument": "NAS100_USD", "mechanism": "576-bar rolling channel, gated by a peer volatility-regime filter", "risk_cap_pct": 3.0 },
-    { "name": "NAS100 Vol Brk", "instrument": "NAS100_USD", "mechanism": "Volatility-expansion breakout (2.2x realised-vol ratio), same regime gate", "risk_cap_pct": 0.25 },
-    { "name": "NAS100 M5", "instrument": "NAS100_USD", "mechanism": "5-minute intraday system", "risk_cap_pct": 5.25 },
-    { "name": "NAS100 M1 Short Hold", "instrument": "NAS100_USD", "mechanism": "1-minute entries, deliberately short holding period", "risk_cap_pct": 6.0 },
-    { "name": "NAS100 ORB", "instrument": "NAS100_USD", "mechanism": "Opening-range breakout", "risk_cap_pct": 4.5 },
-    { "name": "JP225 Chan96 Breakout", "instrument": "JP225_USD", "mechanism": "96-bar channel breakout", "risk_cap_pct": 1.5 },
-    { "name": "SPX500 Chan24 Breakout", "instrument": "SPX500_USD", "mechanism": "24-bar channel breakout", "risk_cap_pct": 1.5 },
-    { "name": "MR SPX500 Dip", "instrument": "SPX500_USD", "mechanism": "20-bar z-score oversold mean reversion, 2.5x ATR stop, 7-bar hold", "risk_cap_pct": 6.0 },
-    { "name": "MR UK100 Dip", "instrument": "UK100_GBP", "mechanism": "50-bar z-score oversold mean reversion", "risk_cap_pct": 0.0, "note": "Live and evaluating signals, but capped at zero: it will not size a position." },
-    { "name": "NL25 EUR", "instrument": "NL25_EUR", "mechanism": "Dutch index intraday system", "risk_cap_pct": 0.25 },
-    { "name": "VRP", "instrument": "7 index legs, H1", "mechanism": "Variance-risk-premium sleeve across NAS100, FR40, UK100, NL25, AU200, JP225, HK33", "risk_cap_pct": 1.75, "note": "1.75% is a pooled cap across all seven legs." },
-    { "name": "US30 Event Scalper", "instrument": "US30_USD", "mechanism": "Scalps a defined event window", "risk_cap_pct": 2.0 },
-    { "name": "Gold Trend TSMOM", "instrument": "XAU_USD", "mechanism": "Three-speed MA crossover (10/50, 20/100, 50/200), long-only, 8% annualised volatility target, trades only above 1,000 NAV", "risk_cap_pct": null, "note": "Sized to a volatility target rather than a fixed per-trade risk cap." },
-    { "name": "Gold Momentum Cont", "instrument": "XAU_USD", "mechanism": "Momentum continuation", "risk_cap_pct": 0.5 },
-    { "name": "XAGUSD POC Short v3", "instrument": "XAG_USD", "mechanism": "Volume-profile point-of-control, short side only", "risk_cap_pct": 5.5 },
-    { "name": "NATGAS POC v7", "instrument": "NATGAS_USD", "mechanism": "Volume-profile point-of-control", "risk_cap_pct": 6.0 },
-    { "name": "USDCAD Capitulation Rev", "instrument": "USD_CAD", "mechanism": "Capitulation reversal", "risk_cap_pct": 2.0 },
-    { "name": "NZD FalseBreak Short", "instrument": "NZD_USD", "mechanism": "False-breakout short", "risk_cap_pct": 6.0 }
+    {
+      "name": "BCO Brent Trend",
+      "instrument": "BCO_USD",
+      "mechanism": "Daily Donchian-10 breakout, chandelier trailing stop",
+      "risk_cap_pct": 0.75
+    },
+    {
+      "name": "WTICO WTI Trend",
+      "instrument": "WTICO_USD",
+      "mechanism": "Same family as Brent, separate parameters",
+      "risk_cap_pct": 0.25
+    },
+    {
+      "name": "DE30 Channel v9",
+      "instrument": "DE30_EUR",
+      "mechanism": "Intraday rolling-channel breakout, M1 source bars",
+      "risk_cap_pct": 1.5
+    },
+    {
+      "name": "NAS100 Channel v9",
+      "instrument": "NAS100_USD",
+      "mechanism": "Rolling-channel breakout, M5 source bars",
+      "risk_cap_pct": 1.5
+    },
+    {
+      "name": "US30 Channel v9",
+      "instrument": "US30_USD",
+      "mechanism": "Rolling-channel breakout, M1 source bars",
+      "risk_cap_pct": 2.0
+    },
+    {
+      "name": "SPX500 Channel v6 Rebuild",
+      "instrument": "SPX500_USD",
+      "mechanism": "Rolling-channel breakout, M5 source bars",
+      "risk_cap_pct": 1.5
+    },
+    {
+      "name": "NAS100 Swing Chan",
+      "instrument": "NAS100_USD",
+      "mechanism": "576-bar rolling channel, gated by a peer volatility-regime filter",
+      "risk_cap_pct": 3.0
+    },
+    {
+      "name": "NAS100 Vol Brk",
+      "instrument": "NAS100_USD",
+      "mechanism": "Volatility-expansion breakout (2.2x realised-vol ratio), same regime gate",
+      "risk_cap_pct": 0.25
+    },
+    {
+      "name": "NAS100 M5",
+      "instrument": "NAS100_USD",
+      "mechanism": "5-minute intraday system",
+      "risk_cap_pct": 5.25
+    },
+    {
+      "name": "NAS100 M1 Short Hold",
+      "instrument": "NAS100_USD",
+      "mechanism": "1-minute entries, deliberately short holding period",
+      "risk_cap_pct": 6.0
+    },
+    {
+      "name": "NAS100 ORB",
+      "instrument": "NAS100_USD",
+      "mechanism": "Opening-range breakout",
+      "risk_cap_pct": 4.5
+    },
+    {
+      "name": "JP225 Chan96 Breakout",
+      "instrument": "JP225_USD",
+      "mechanism": "96-bar channel breakout",
+      "risk_cap_pct": 1.5
+    },
+    {
+      "name": "SPX500 Chan24 Breakout",
+      "instrument": "SPX500_USD",
+      "mechanism": "24-bar channel breakout",
+      "risk_cap_pct": 1.5
+    },
+    {
+      "name": "MR SPX500 Dip",
+      "instrument": "SPX500_USD",
+      "mechanism": "20-bar z-score oversold mean reversion, 2.5x ATR stop, 7-bar hold",
+      "risk_cap_pct": 6.0
+    },
+    {
+      "name": "MR UK100 Dip",
+      "instrument": "UK100_GBP",
+      "mechanism": "50-bar z-score oversold mean reversion",
+      "risk_cap_pct": 0.0,
+      "note": "Live and evaluating signals, but capped at zero: it will not size a position."
+    },
+    {
+      "name": "NL25 EUR",
+      "instrument": "NL25_EUR",
+      "mechanism": "Dutch index intraday system",
+      "risk_cap_pct": 0.25
+    },
+    {
+      "name": "VRP",
+      "instrument": "7 index legs, H1",
+      "mechanism": "Variance-risk-premium sleeve across NAS100, FR40, UK100, NL25, AU200, JP225, HK33",
+      "risk_cap_pct": 1.75,
+      "note": "1.75% is a pooled cap across all seven legs."
+    },
+    {
+      "name": "US30 Event Scalper",
+      "instrument": "US30_USD",
+      "mechanism": "Scalps a defined event window",
+      "risk_cap_pct": 2.0
+    },
+    {
+      "name": "Gold Trend TSMOM",
+      "instrument": "XAU_USD",
+      "mechanism": "Three-speed MA crossover (10/50, 20/100, 50/200), long-only, 8% annualised volatility target, trades only above 1,000 NAV",
+      "risk_cap_pct": null,
+      "note": "Sized to a volatility target rather than a fixed per-trade risk cap."
+    },
+    {
+      "name": "Gold Momentum Cont",
+      "instrument": "XAU_USD",
+      "mechanism": "Momentum continuation",
+      "risk_cap_pct": 0.5
+    },
+    {
+      "name": "XAGUSD POC Short v3",
+      "instrument": "XAG_USD",
+      "mechanism": "Volume-profile point-of-control, short side only",
+      "risk_cap_pct": 5.5
+    },
+    {
+      "name": "NATGAS POC v7",
+      "instrument": "NATGAS_USD",
+      "mechanism": "Volume-profile point-of-control",
+      "risk_cap_pct": 6.0
+    },
+    {
+      "name": "USDCAD Capitulation Rev",
+      "instrument": "USD_CAD",
+      "mechanism": "Capitulation reversal",
+      "risk_cap_pct": 2.0
+    },
+    {
+      "name": "NZD FalseBreak Short",
+      "instrument": "NZD_USD",
+      "mechanism": "False-breakout short",
+      "risk_cap_pct": 6.0
+    },
+    {
+      "name": "XAUUSD POC Short v17",
+      "instrument": "XAU_USD",
+      "mechanism": "Volume-profile point-of-control / value-area and prior-day pivot resistance fade, short side only; on this netting account it borrows units from the gold trend sleeve's position rather than opening an opposite trade",
+      "added": "2026-09-07",
+      "risk_cap_pct": 2.0
+    }
   ],
-  "changes": []
+  "changes": [
+    {
+      "date": "2026-09-07",
+      "change": "added",
+      "system": "XAUUSD POC Short v17",
+      "note": "gold short-side level fade, 2% cap; the gold trend sleeve now lends units to it while a short is open (net exposure unchanged for the account)"
+    }
+  ]
 }
