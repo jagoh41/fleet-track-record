@@ -106,8 +106,9 @@ Listed here because a track record that only publishes its strengths is marketin
 - **Deposits and withdrawals** inside the window are listed in
   [`data/summary.json`](data/summary.json) and annotated on the chart, because a
   transfer moves the balance without a trade. There were none at publication.
-- **Refresh:** run `python update.py --env-file <path outside this repo>` and
-  commit. Credentials are never read from, or written into, this repository.
+- **Refresh:** a timer on the trading host runs `update.py` daily at 06:30 UTC and
+  commits the three data files; a manual refresh is the same command,
+  `python update.py --env-file <path outside this repo>`, then commit. Credentials are never read from, or written into, this repository.
 
 ## Disclaimer
 
