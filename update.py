@@ -160,7 +160,7 @@ def main():
               "broker_trade_id", "bot_tag"]
     with open(os.path.join(DATA, "closed_trades.csv"), "w", newline="",
               encoding="utf-8") as f:
-        w = csv.DictWriter(f, fieldnames=fields)
+        w = csv.DictWriter(f, fieldnames=fields, lineterminator="\n")
         w.writeheader()
         w.writerows(rows)
 
@@ -194,7 +194,7 @@ def main():
     series.insert(0, {"time": START.strftime("%Y-%m-%dT%H:%M:%SZ"),
                       "balance": round(opening, 2)})
     with open(os.path.join(DATA, "equity.csv"), "w", newline="", encoding="utf-8") as f:
-        w = csv.DictWriter(f, fieldnames=["time", "balance"])
+        w = csv.DictWriter(f, fieldnames=["time", "balance"], lineterminator="\n")
         w.writeheader()
         w.writerows(series)
 
