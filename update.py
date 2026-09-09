@@ -200,6 +200,10 @@ def main():
 
     # ---- summary ----
     pls = [float(t.get("realizedPL", 0)) for t in trades]
+    # Capital flows INSIDE the window are money moving, never performance. Subtract them from the NAV-based return so a
+    # withdrawal cannot be published as a loss (2026-09-09: -250.00 was reading as -12 % of the account).
+    net_flows = round(sum(f["amount"] for f in flows if f["in_window"]), 2)
+    capital_contributed = round(opening + net_flows, 2)
     wins = [p for p in pls if p > 0]
     losses = [p for p in pls if p < 0]
     opens = broker.open_trades()
@@ -229,11 +233,16 @@ def main():
         # Deposits/withdrawals INSIDE the window would distort any return figure.
         # The record covers this window only; nothing outside it is published.
         "capital_flows_in_window": [f for f in flows if f["in_window"]],
+        "net_capital_flows_in_window": net_flows,
+        "capital_contributed": capital_contributed,
         "margin_refusals": margin_refusals,
         "realised_return_pct_on_opening": (round(100.0 * sum(pls) / opening, 2)
                                            if opening else None),
-        "nav_return_pct_on_opening": (round(100.0 * (nav - opening) / opening, 2)
+        # NAV return with capital flows removed: what the trading did, not what the bank transfer did.
+        "nav_return_pct_on_opening": (round(100.0 * (nav - opening - net_flows) / opening, 2)
                                       if opening else None),
+        "nav_return_pct_on_capital": (round(100.0 * (nav - capital_contributed) / capital_contributed, 2)
+                                      if capital_contributed else None),
     }
     with open(os.path.join(DATA, "summary.json"), "w", encoding="utf-8") as f:
         json.dump(summary, f, indent=2)
