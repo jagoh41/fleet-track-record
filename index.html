@@ -150,6 +150,10 @@
       <li><strong>The account is small</strong> — £2,000 at the open, and it had
         never traded before this record began. Percentages on an account this size
         swing hard and do not transfer to a larger one. Read the £ column.</li>
+      <li><strong>Money paid in or taken out is not performance.</strong> Every
+        transfer is listed in the summary and subtracted from the return figures,
+        so a withdrawal never shows up as a loss. The balance chart still steps at
+        the moment it happens.</li>
       <li><strong>Anything left of the publication marker was already known</strong>
         when this page went up, and is shaded. If nothing is shaded, nothing was.</li>
       <li><strong>Open positions are excluded from realised P&amp;L</strong> and can
@@ -269,7 +273,12 @@ async function load() {
       foot: summary.closed_trades ? summary.wins + " up · " + summary.losses + " down"
                                   : "no closed trades yet" },
     { label: "Account balance", value: GBP(summary.balance),
-      foot: "opened at " + GBP(summary.opening_balance) },
+      foot: summary.net_capital_flows_in_window
+        ? "opened at " + GBP(summary.opening_balance) + " · "
+          + (summary.net_capital_flows_in_window < 0 ? "withdrawn " : "paid in ")
+          + GBP(Math.abs(summary.net_capital_flows_in_window)) + " · "
+          + GBP(summary.capital_contributed) + " at work"
+        : "opened at " + GBP(summary.opening_balance) },
   ];
   document.getElementById("tiles").innerHTML = tiles.map(t => `
     <div class="tile">

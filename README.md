@@ -5,7 +5,9 @@ OANDA account.
 
 **The record opens 2026-09-06 and never moves.** It tracks one broker account,
 `001-004-19806960-002`, which was funded on 2026-09-04 with £2,000.00 and had
-never placed a trade before this record began. Every closed trade from the
+never placed a trade before this record began. £250.00 was withdrawn on
+2026-09-09, leaving £1,750.00 at work; that transfer is disclosed in
+[`data/summary.json`](data/summary.json) and is never counted as performance. Every closed trade from the
 opening moment on appears here, win or lose, with no bot excluded and no window
 re-chosen. The roster is published in [`ROSTER.md`](ROSTER.md) with the live risk
 cap each system actually runs.
@@ -20,9 +22,10 @@ cap each system actually runs.
 meaningful yet. A profit factor computed on twenty trades is a description of
 twenty trades, not evidence of an edge.
 
-**The account is small — £2,000.00 at the open.** Percentage returns on an
-account this size swing violently and do not transfer to a larger one. The £
-column is the honest one; the % column is arithmetic.
+**The account is small — £2,000.00 at the open, £1,750.00 at work after the
+2026-09-09 withdrawal.** Percentage returns on an account this size swing
+violently and do not transfer to a larger one. The £ column is the honest one;
+the % column is arithmetic.
 
 **The publication marker is the only line that matters.** `data/meta.json`
 carries `published_at`, set once when this repository first went public and
@@ -105,7 +108,11 @@ Listed here because a track record that only publishes its strengths is marketin
   transaction. It is not reconstructed from trade P&L.
 - **Deposits and withdrawals** inside the window are listed in
   [`data/summary.json`](data/summary.json) and annotated on the chart, because a
-  transfer moves the balance without a trade. There were none at publication.
+  transfer moves the balance without a trade. They are **subtracted from every
+  return figure**: `net_capital_flows_in_window` carries the signed total,
+  `capital_contributed` is the money at work, and the NAV-based returns are
+  computed with the flows removed, so a withdrawal can never be published as a
+  loss. There were none at publication; £250.00 was withdrawn on 2026-09-09.
 - **Refresh:** a timer on the trading host runs `update.py` daily at 06:30 UTC and
   commits the three data files; a manual refresh is the same command,
   `python update.py --env-file <path outside this repo>`, then commit. Credentials are never read from, or written into, this repository.
