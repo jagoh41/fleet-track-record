@@ -1,5 +1,5 @@
 {
-  "pulled_at": "2026-09-08T13:05:12Z",
+  "pulled_at": "2026-09-17T22:51:08Z",
   "source": "systemctl list-units tradebot_* --state=active on the trading host; risk caps read from the arguments of each running service, else from the config file it names (risk_cap / fallback_cap; target_vol = vol-targeted). Re-read on every daily refresh; differences are logged in changes.",
   "count": 25,
   "systems": [
@@ -14,91 +14,91 @@
       "name": "WTICO WTI Trend",
       "instrument": "WTICO_USD",
       "mechanism": "Same family as Brent, separate parameters",
-      "risk_cap_pct": 0.25,
+      "risk_cap_pct": 0.75,
       "service": "tradebot_crude_wti"
     },
     {
       "name": "DE30 Channel v9",
       "instrument": "DE30_EUR",
       "mechanism": "Intraday rolling-channel breakout, M1 source bars",
-      "risk_cap_pct": 1.5,
+      "risk_cap_pct": 0.25,
       "service": "tradebot_de30_eur_channel_v9"
     },
     {
       "name": "NAS100 Channel v9",
       "instrument": "NAS100_USD",
       "mechanism": "Rolling-channel breakout, M5 source bars",
-      "risk_cap_pct": 1.5,
+      "risk_cap_pct": 0.15,
       "service": "tradebot_nas100_usd_channel_v9"
     },
     {
       "name": "US30 Channel v9",
       "instrument": "US30_USD",
       "mechanism": "Rolling-channel breakout, M1 source bars",
-      "risk_cap_pct": 2.0,
+      "risk_cap_pct": 0.0,
       "service": "tradebot_us30_usd_channel_v9"
     },
     {
       "name": "SPX500 Channel v6 Rebuild",
       "instrument": "SPX500_USD",
       "mechanism": "Rolling-channel breakout, M5 source bars",
-      "risk_cap_pct": 1.5,
+      "risk_cap_pct": 0.0,
       "service": "tradebot_spx500_usd_channel_v6_rebuild"
     },
     {
       "name": "NAS100 Swing Chan",
       "instrument": "NAS100_USD",
       "mechanism": "576-bar rolling channel, gated by a peer volatility-regime filter",
-      "risk_cap_pct": 3.0,
+      "risk_cap_pct": 2.15,
       "service": "tradebot_factory_v3_x_swing_chan_nas100"
     },
     {
       "name": "NAS100 Vol Brk",
       "instrument": "NAS100_USD",
       "mechanism": "Volatility-expansion breakout (2.2x realised-vol ratio), same regime gate",
-      "risk_cap_pct": 0.25,
+      "risk_cap_pct": 2.4,
       "service": "tradebot_factory_v3_x_volbrk_nas100"
     },
     {
       "name": "NAS100 M5",
       "instrument": "NAS100_USD",
       "mechanism": "5-minute intraday system",
-      "risk_cap_pct": 5.25,
+      "risk_cap_pct": 4.65,
       "service": "tradebot_m5_nas100"
     },
     {
       "name": "NAS100 M1 Short Hold",
       "instrument": "NAS100_USD",
       "mechanism": "1-minute entries, deliberately short holding period",
-      "risk_cap_pct": 6.0,
+      "risk_cap_pct": 2.5,
       "service": "tradebot_nas100_m1_short_hold"
     },
     {
       "name": "NAS100 ORB",
       "instrument": "NAS100_USD",
       "mechanism": "Opening-range breakout",
-      "risk_cap_pct": 4.5,
+      "risk_cap_pct": 0.85,
       "service": "tradebot_nas100_orb"
     },
     {
       "name": "JP225 Chan96 Breakout",
       "instrument": "JP225_USD",
       "mechanism": "96-bar channel breakout",
-      "risk_cap_pct": 1.5,
+      "risk_cap_pct": 0.5,
       "service": "tradebot_jp225_usd_camp2_chan96"
     },
     {
       "name": "SPX500 Chan24 Breakout",
       "instrument": "SPX500_USD",
       "mechanism": "24-bar channel breakout",
-      "risk_cap_pct": 1.5,
+      "risk_cap_pct": 0.0,
       "service": "tradebot_spx500_usd_camp2_chan24"
     },
     {
       "name": "MR SPX500 Dip",
       "instrument": "SPX500_USD",
       "mechanism": "20-bar z-score oversold mean reversion, 2.5x ATR stop, 7-bar hold",
-      "risk_cap_pct": 6.0,
+      "risk_cap_pct": 4.9,
       "service": "tradebot_mr_spx"
     },
     {
@@ -113,7 +113,7 @@
       "name": "NL25 EUR",
       "instrument": "NL25_EUR",
       "mechanism": "Dutch index intraday system",
-      "risk_cap_pct": 0.25,
+      "risk_cap_pct": 0.35,
       "service": "tradebot_nl25_eur"
     },
     {
@@ -136,21 +136,21 @@
       "name": "Gold Momentum Cont",
       "instrument": "XAU_USD",
       "mechanism": "Momentum continuation",
-      "risk_cap_pct": 0.5,
+      "risk_cap_pct": 2.25,
       "service": "tradebot_momcont_xau"
     },
     {
       "name": "XAGUSD POC Short v3",
       "instrument": "XAG_USD",
       "mechanism": "Volume-profile point-of-control, short side only",
-      "risk_cap_pct": 5.5,
+      "risk_cap_pct": 4.75,
       "service": "tradebot_xagusd_poc_short_v3"
     },
     {
       "name": "NATGAS POC v7",
       "instrument": "NATGAS_USD",
       "mechanism": "Volume-profile point-of-control",
-      "risk_cap_pct": 6.0,
+      "risk_cap_pct": 0.0,
       "service": "tradebot_natgas_poc_v7"
     },
     {
@@ -164,7 +164,7 @@
       "name": "NZD FalseBreak Short",
       "instrument": "NZD_USD",
       "mechanism": "False-breakout short",
-      "risk_cap_pct": 6.0,
+      "risk_cap_pct": 0.0,
       "service": "tradebot_swing_nzd_fb"
     },
     {
@@ -172,7 +172,7 @@
       "instrument": "XAU_USD",
       "mechanism": "Volume-profile point-of-control / value-area and prior-day pivot resistance fade, short side only; on this netting account it borrows units from the gold trend sleeve's position rather than opening an opposite trade",
       "added": "2026-09-07",
-      "risk_cap_pct": 2.0,
+      "risk_cap_pct": 3.65,
       "service": "tradebot_xauusd_poc_short_v17"
     },
     {
@@ -220,6 +220,120 @@
       "change": "re-sized",
       "system": "fleet",
       "note": "walk-forward store vector applied (momcont 1.35%, NAS100 swing and vol-break 1.55%, M1 short hold 1.8%, JP225 0.45%, DE30 0.15%), then re-touched later the same evening; the per-system rows below are re-read from the running services on every refresh, and any difference from this list is logged as its own dated entry"
+    },
+    {
+      "date": "2026-09-17",
+      "change": "re-capped",
+      "system": "WTICO WTI Trend",
+      "note": "risk cap 0.25% -> 0.75%, read from the running service (risk_cap in crude_wti.json)"
+    },
+    {
+      "date": "2026-09-17",
+      "change": "re-capped",
+      "system": "DE30 Channel v9",
+      "note": "risk cap 1.5% -> 0.25%, read from the running service (--max-risk-cap of the running process)"
+    },
+    {
+      "date": "2026-09-17",
+      "change": "re-capped",
+      "system": "NAS100 Channel v9",
+      "note": "risk cap 1.5% -> 0.15%, read from the running service (--max-risk-cap of the running process)"
+    },
+    {
+      "date": "2026-09-17",
+      "change": "re-capped",
+      "system": "US30 Channel v9",
+      "note": "risk cap 2% -> 0%, read from the running service (--max-risk-cap of the running process)"
+    },
+    {
+      "date": "2026-09-17",
+      "change": "re-capped",
+      "system": "SPX500 Channel v6 Rebuild",
+      "note": "risk cap 1.5% -> 0%, read from the running service (--max-risk-cap of the running process)"
+    },
+    {
+      "date": "2026-09-17",
+      "change": "re-capped",
+      "system": "NAS100 Swing Chan",
+      "note": "risk cap 3% -> 2.15%, read from the running service (fallback_cap in x_swing_chan_nas100.json)"
+    },
+    {
+      "date": "2026-09-17",
+      "change": "re-capped",
+      "system": "NAS100 Vol Brk",
+      "note": "risk cap 0.25% -> 2.4%, read from the running service (fallback_cap in x_volbrk_nas100.json)"
+    },
+    {
+      "date": "2026-09-17",
+      "change": "re-capped",
+      "system": "NAS100 M5",
+      "note": "risk cap 5.25% -> 4.65%, read from the running service (--max-risk-cap of the running process)"
+    },
+    {
+      "date": "2026-09-17",
+      "change": "re-capped",
+      "system": "NAS100 M1 Short Hold",
+      "note": "risk cap 6% -> 2.5%, read from the running service (--max-risk-cap of the running process)"
+    },
+    {
+      "date": "2026-09-17",
+      "change": "re-capped",
+      "system": "NAS100 ORB",
+      "note": "risk cap 4.5% -> 0.85%, read from the running service (--max-risk-cap of the running process)"
+    },
+    {
+      "date": "2026-09-17",
+      "change": "re-capped",
+      "system": "JP225 Chan96 Breakout",
+      "note": "risk cap 1.5% -> 0.5%, read from the running service (risk_cap in locked_jp225_usd_camp2_chan96_20260812.json)"
+    },
+    {
+      "date": "2026-09-17",
+      "change": "re-capped",
+      "system": "SPX500 Chan24 Breakout",
+      "note": "risk cap 1.5% -> 0%, read from the running service (risk_cap in locked_spx500_usd_camp2_chan24_20260812.json)"
+    },
+    {
+      "date": "2026-09-17",
+      "change": "re-capped",
+      "system": "MR SPX500 Dip",
+      "note": "risk cap 6% -> 4.9%, read from the running service (risk_cap in mr_spx.json)"
+    },
+    {
+      "date": "2026-09-17",
+      "change": "re-capped",
+      "system": "NL25 EUR",
+      "note": "risk cap 0.25% -> 0.35%, read from the running service (--max-risk-cap of the running process)"
+    },
+    {
+      "date": "2026-09-17",
+      "change": "re-capped",
+      "system": "Gold Momentum Cont",
+      "note": "risk cap 0.5% -> 2.25%, read from the running service (risk_cap in momcont_xau.json)"
+    },
+    {
+      "date": "2026-09-17",
+      "change": "re-capped",
+      "system": "XAGUSD POC Short v3",
+      "note": "risk cap 5.5% -> 4.75%, read from the running service (--max-risk-cap of the running process)"
+    },
+    {
+      "date": "2026-09-17",
+      "change": "re-capped",
+      "system": "NATGAS POC v7",
+      "note": "risk cap 6% -> 0%, read from the running service (--max-risk-cap of the running process)"
+    },
+    {
+      "date": "2026-09-17",
+      "change": "re-capped",
+      "system": "NZD FalseBreak Short",
+      "note": "risk cap 6% -> 0%, read from the running service (risk_cap in nzd_fb.json)"
+    },
+    {
+      "date": "2026-09-17",
+      "change": "re-capped",
+      "system": "XAUUSD POC Short v17",
+      "note": "risk cap 2% -> 3.65%, read from the running service (--max-risk-cap of the running process)"
     }
   ]
 }
