@@ -1,10 +1,11 @@
 # The roster
 
-24 systems, running on one live OANDA account. There is no second account, no
-paper sleeve, and nothing excluded from the record.
+25 systems, running on one live OANDA account. There is no second account, no
+paper sleeve, and nothing excluded from the record. The headline count on the
+page is read from the roster file, never typed in.
 
 **The table itself lives in [`data/roster.json`](data/roster.json)** — one source,
-rendered on [the page](https://USERNAME.github.io/REPO/) and machine-readable here.
+rendered on [the page](https://jagoh41.github.io/fleet-track-record/) and machine-readable here.
 It carries, for every system: name, instrument, a plain-English mechanism, and the
 live risk cap.
 
@@ -15,12 +16,16 @@ fraction of account equity risked between entry and stop on a single position.
 
 ## Notes that matter
 
-**MR UK100 runs at a 0% cap.** It is live, it evaluates signals, and it will not
-size a position. It is listed because it is running, not because it trades.
+**Several systems run at a 0% cap.** They are live, they evaluate signals, and
+they will not size a position; they are listed because they are running, not
+because they trade. Their rows are muted on the page and the roster marks each
+one. A cap is set to zero when the fleet's sizing rules give a system no budget;
+the service keeps running so its forward record keeps accruing.
 
-**Eight systems share NAS100, and the index sleeve can crowd out the rest.** The
-NAS100 systems net into a single broker position, so the account's realised P&L on
-that instrument is not the sum of eight independent strategies. More importantly,
+**Seven systems share NAS100 (six of their own plus a VRP leg), and the index
+sleeve can crowd out the rest.** The NAS100 systems net into a single broker
+position, so the account's realised P&L on that instrument is not the sum of
+seven independent strategies. More importantly,
 the index systems together can use most of the account's margin during the US
 session, and orders that arrive after that point — usually the metals systems —
 are refused by the broker. `margin_refusals` in `data/summary.json` counts those
@@ -30,15 +35,19 @@ refusals inside the record window.
 target and only trades above £1,000 NAV, so it is not comparable to the per-trade
 percentages on the other rows.
 
-**Caps are per-position, not per-account.** With 24 systems live, simultaneous
+**Caps are per-position, not per-account.** With 25 systems live, simultaneous
 positions can and do stack. There is no global risk governor beyond broker margin.
 
 ## Roster changes since the record opened
 
-The record starts 2026-09-06 with the 24 systems listed in
-[`data/roster.json`](data/roster.json). No system has been added, removed or
-re-capped since — the `changes` array there is empty, and it stays the single
-place a change is recorded.
+The record started 2026-09-06 with 24 systems. Every addition, removal and
+re-cap since is a dated entry in the `changes` array of
+[`data/roster.json`](data/roster.json), which is the single place a change is
+recorded; the page renders that array beneath the roster table. In short: a gold
+short-side fade was added on 2026-09-07, a metals book (crosses and copper) on
+2026-09-12, the US30 event scalper was stopped on 2026-09-13, and the risk caps
+were re-sized on 2026-09-13, 2026-09-16 and 2026-09-17 to vectors chosen by the
+fleet's walk-forward sizing process — several systems now run at 0%.
 
 Any future roster change gets a dated entry in `roster.json`, in the commit that
 makes it. That is the whole point of publishing the roster.
