@@ -137,7 +137,7 @@
 
   <header>
     <h1>Live fleet track record</h1>
-    <p class="sub">24 automated systems, one live account. Every closed trade since
+    <p class="sub"><span id="sys-count">25</span> automated systems, one live account. Every closed trade since
       6 September 2026, win or lose.</p>
     <p class="stamp" id="stamp">Loading…</p>
   </header>
@@ -312,6 +312,8 @@ async function load() {
 }
 
 function renderRoster(roster) {
+  // The headline count is the roster, never a number typed into the page.
+  document.getElementById("sys-count").textContent = roster.systems.length;
   document.querySelector("#roster tbody").innerHTML = roster.systems.map(s => {
     const cap = s.risk_cap_pct === null ? "vol-targeted"
               : s.risk_cap_pct === 0 ? "0% — idle"
@@ -339,7 +341,7 @@ function renderRoster(roster) {
         <thead><tr><th>Date</th><th>System</th><th>Change</th></tr></thead>
         <tbody>${roster.changes.map(c => `<tr>
           <td class="tag">${esc(c.date)}</td>
-          <td>${esc(c.name)} <span class="tag">${esc(c.instrument)}</span></td>
+          <td>${esc(c.system || c.name || "")}${c.instrument ? ` <span class="tag">${esc(c.instrument)}</span>` : ""}</td>
           <td>${esc(c.change)}${c.note ? `<span class="note">${esc(c.note)}</span>` : ""}</td>
         </tr>`).join("")}</tbody>
       </table></div>`;
@@ -379,10 +381,20 @@ function drawChart(rows, meta) {
   // visible is known now), published before the first data point (nothing was
   // known: no band at all), or published mid-record (band up to the marker).
   const pub = meta.published_at ? Date.parse(meta.published_at) : null;
-  const forwardOnly = pub !== null && pub <= t0;
-  const split = pub !== null && pub > t0 && pub < t1;
+  // The first point is the opening balance stamped at record start, which is not
+  // information about trading. The record is forward in its entirety when the
+  // marker precedes the first balance MOVE (a trade or a transfer), not merely
+  // that opening stamp - so no band is drawn for the hours between the two.
+  const firstMove = pts.find(p => p.v !== pts[0].v);
+  const knownBefore = firstMove ? firstMove.t : t1;
+  const forwardOnly = pub !== null && pub <= knownBefore;
+  const split = pub !== null && !forwardOnly && pub < t1;
   const bandEnd = forwardOnly ? X(t0) : split ? X(pub) : (W - mR);
   const last = pts[pts.length - 1];
+  // Label geometry: a band narrower than the label it would carry gets no label
+  // of its own, so the two phase labels can never print on top of each other.
+  const labelX = Math.max(X(t0), pub !== null ? X(Math.min(Math.max(pub, t0), t1)) : X(t0)) + 6;
+  const tight = split && (X(pub) - X(t0)) < 230;
 
   const svg = `
   <svg viewBox="0 0 ${W} ${H}" role="img"
@@ -398,10 +410,11 @@ function drawChart(rows, meta) {
     </g>
     ${split ? `
       <line class="divider" x1="${X(pub).toFixed(1)}" x2="${X(pub).toFixed(1)}" y1="${mT}" y2="${H - mB}"></line>
-      <text class="phase" x="${(X(t0) + 6).toFixed(1)}" y="${mT + 14}">BACKFILLED — already known</text>
-      <text class="phase" x="${(X(pub) + 6).toFixed(1)}" y="${mT + 14}">FORWARD — unknown at publication</text>
+      ${tight ? "" : `<text class="phase" x="${(X(t0) + 6).toFixed(1)}" y="${mT + 14}">BACKFILLED — already known</text>`}
+      <text class="phase" x="${(X(pub) + 6).toFixed(1)}" y="${mT + 14}">FORWARD — unknown at publication${tight ? " (shaded sliver to the left: backfilled)" : ""}</text>
     ` : forwardOnly
-      ? `<text class="phase" x="${(X(t0) + 6).toFixed(1)}" y="${mT + 14}">FORWARD — published ${fmtFull(pub)}, before the first trade</text>`
+      ? `${pub > t0 ? `<line class="divider" x1="${X(pub).toFixed(1)}" x2="${X(pub).toFixed(1)}" y1="${mT}" y2="${H - mB}"></line>` : ""}
+         <text class="phase" x="${labelX.toFixed(1)}" y="${mT + 14}">FORWARD — published ${fmtFull(pub)}, before the first trade</text>`
       : `<text class="phase" x="${(X(t0) + 6).toFixed(1)}" y="${mT + 14}">${pub === null ? "NOT YET PUBLISHED — everything shown is known now" : "BACKFILLED — already known at publication"}</text>`}
     <path class="area" d="${area}"></path>
     <path class="series" d="${line}"></path>

@@ -1,6 +1,6 @@
 # Live fleet track record
 
-A public, append-only record of 24 automated trading systems running on one live
+A public, append-only record of 25 automated trading systems running on one live
 OANDA account.
 
 **The record opens 2026-09-06 and never moves.** It tracks one broker account,
