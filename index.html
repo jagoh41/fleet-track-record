@@ -273,10 +273,13 @@ async function load() {
       foot: summary.closed_trades ? summary.wins + " up · " + summary.losses + " down"
                                   : "no closed trades yet" },
     { label: "Account balance", value: GBP(summary.balance),
-      foot: summary.net_capital_flows_in_window
+      // Every transfer is named, in order: a withdrawal and a matching deposit net
+      // to zero, and a net of zero must never read as "nothing happened".
+      foot: (summary.capital_flows_in_window || []).length
         ? "opened at " + GBP(summary.opening_balance) + " · "
-          + (summary.net_capital_flows_in_window < 0 ? "withdrawn " : "paid in ")
-          + GBP(Math.abs(summary.net_capital_flows_in_window)) + " · "
+          + summary.capital_flows_in_window.map(f =>
+              GBP(Math.abs(f.amount)) + (f.amount < 0 ? " withdrawn " : " paid in ")
+              + String(f.time).slice(0, 10)).join(", ") + " · "
           + GBP(summary.capital_contributed) + " at work"
         : "opened at " + GBP(summary.opening_balance) },
   ];
