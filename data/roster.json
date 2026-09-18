@@ -1,5 +1,5 @@
 {
-  "pulled_at": "2026-09-17T22:51:08Z",
+  "pulled_at": "2026-09-18T06:31:56Z",
   "source": "systemctl list-units tradebot_* --state=active on the trading host; risk caps read from the arguments of each running service, else from the config file it names (risk_cap / fallback_cap; target_vol = vol-targeted). Re-read on every daily refresh; differences are logged in changes.",
   "count": 25,
   "systems": [
