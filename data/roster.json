@@ -184,58 +184,58 @@
       "service": "tradebot_metals_book"
     },
     {
-      "name": "momcont_bco",
+      "name": "BCO Momentum Cont",
       "instrument": "BCO_USD",
-      "mechanism": "description pending - a live service the roster had no row for",
+      "mechanism": "Momentum continuation on Brent, long only: a fresh multi-bar impulse inside a slow uptrend, taken only near the 50-day high; wide target, time-capped hold",
       "risk_cap_pct": 1.15,
       "service": "tradebot_momcont_bco"
     },
     {
-      "name": "momcont_de30",
+      "name": "DE30 Momentum Cont",
       "instrument": "DE30_EUR",
-      "mechanism": "description pending - a live service the roster had no row for",
+      "mechanism": "Same momentum-continuation family as the gold system, on DE30; cap set to 0% on 2026-09-20 after its 2026 stretch failed the fleet's own tests",
       "risk_cap_pct": 0.0,
       "service": "tradebot_momcont_de30"
     },
     {
-      "name": "momcont_nas100",
+      "name": "NAS100 Momentum Cont",
       "instrument": "NAS100_USD",
-      "mechanism": "description pending - a live service the roster had no row for",
+      "mechanism": "Same momentum-continuation family, on NAS100; cap set to 0% on 2026-09-20 after its 2026 stretch failed the fleet's own tests",
       "risk_cap_pct": 0.0,
       "service": "tradebot_momcont_nas100"
     },
     {
-      "name": "momcont_usdjpy",
+      "name": "USDJPY Momentum Cont",
       "instrument": "USD_JPY",
-      "mechanism": "description pending - a live service the roster had no row for",
+      "mechanism": "Same momentum-continuation family, on USD/JPY; cap set to 0% on 2026-09-20 after its 2026 stretch failed the fleet's own tests",
       "risk_cap_pct": 0.0,
       "service": "tradebot_momcont_usdjpy"
     },
     {
-      "name": "usdjpy_camp2_chan96",
+      "name": "USDJPY Chan96 Breakout",
       "instrument": "USD_JPY",
-      "mechanism": "description pending - a live service the roster had no row for",
+      "mechanism": "96-bar channel breakout on USD/JPY, long side, London-New York overlap (same family as the JP225 breakout)",
       "risk_cap_pct": 1.6,
       "service": "tradebot_usdjpy_camp2_chan96"
     },
     {
-      "name": "x_donch_us30",
+      "name": "US30 Donchian Breakout",
       "instrument": "US30_USD",
-      "mechanism": "description pending - a live service the roster had no row for",
+      "mechanism": "Donchian-channel breakout on US30 with a macro-regime gate, fixed stop and target, time-capped hold",
       "risk_cap_pct": 1.1,
       "service": "tradebot_x_donch_us30"
     },
     {
-      "name": "x_vclimax_nas100",
+      "name": "NAS100 Volume Climax",
       "instrument": "NAS100_USD",
-      "mechanism": "description pending - a live service the roster had no row for",
+      "mechanism": "Volume-climax continuation on NAS100: follows the move after a volume spike on a directional bar; short hold, small cap because its stop is tight and margin bites early",
       "risk_cap_pct": 0.5,
       "service": "tradebot_x_vclimax_nas100"
     },
     {
-      "name": "x_hkshort_hk33",
+      "name": "HK33 Cash Short",
       "instrument": "HK33_HKD",
-      "mechanism": "description pending - a live service the roster had no row for",
+      "mechanism": "Shorts the Hong Kong cash session after an up day in the US session; a hedge-like system that loses in most years and pays in the years the rest of the fleet loses",
       "risk_cap_pct": 3.0,
       "service": "tradebot_x_hkshort_hk33"
     }

@@ -1,7 +1,8 @@
 # Live fleet track record
 
-A public, append-only record of 25 automated trading systems running on one live
-OANDA account.
+A public, append-only record of 33 automated trading systems running on one live
+OANDA account — 24 of them currently sized, the other nine running at a 0% risk cap
+so their forward record keeps accruing.
 
 **The record opens 2026-09-06 and never moves.** It tracks one broker account,
 `001-004-19806960-002`, which was funded on 2026-09-04 with £2,000.00 and had
@@ -36,7 +37,7 @@ record is forward in its entirety and the shaded band is empty — check the
 marker against the first row of `data/closed_trades.csv` rather than taking
 that on trust.
 
-**Nine or so positions are usually open.** Unrealised P&L is reported separately
+**Ten to fifteen positions are usually open.** Unrealised P&L is reported separately
 from realised and can reverse entirely. Any figure that blends the two is marked
 as doing so.
 
@@ -75,13 +76,13 @@ Listed here because a track record that only publishes its strengths is marketin
 
 - **There is no per-bot P&L breakdown, and there cannot be one yet.** Most orders
   reach the broker without a bot tag, so the broker's own records cannot say which
-  system placed which trade. Splitting the P&L 24 ways would mean falling back on
+  system placed which trade. Splitting the P&L 33 ways would mean falling back on
   self-reported logs, which is exactly the sort of unverifiable claim this record
   exists to avoid. Account-level figures are the only ones that are fully
   verifiable, so account-level is all that is reported. Per-bot attribution starts
   the day tagging ships, and not one day earlier.
-- **The index systems can exhaust the account's margin.** Eight of the 24 trade
-  NAS100 and several more trade other US indices; during the US session their
+- **The index systems can exhaust the account's margin.** Nine of the 33 trade
+  NAS100 (eight of their own plus a VRP leg) and several more trade other US indices; during the US session their
   positions can use most of the account's margin at once. When that happens the
   broker refuses later orders — typically the metals systems — for insufficient
   margin. A refused order never becomes a trade, so it never appears in the
@@ -96,6 +97,16 @@ Listed here because a track record that only publishes its strengths is marketin
   record opened gets a dated entry in `data/roster.json` in the commit that makes
   the change, and its trades up to that point stay in the record. See
   [`ROSTER.md`](ROSTER.md).
+- **The systems were re-examined walk-forward in September 2026, and it changed
+  the fleet.** Each system's rule-building process was re-run in anchored yearly
+  folds (fit through year Y, trade year Y+1 blind). Several hand-tuned systems
+  produced no honest record that way and now run at 0%; since 2026-09-17 the risk
+  caps are sized on those walk-forward records rather than on each system's own
+  tuning history; the systems added since 2026-09-18 were built the same way, and
+  on 2026-09-20 three of them were set to 0% after their 2026 stretch failed the
+  fleet's own tests. Every one of those changes is a dated entry in
+  `data/roster.json`. The old sizing basis overstated; this record measures the
+  fleet as it is actually sized, not as it was once expected to perform.
 
 ## Method
 
