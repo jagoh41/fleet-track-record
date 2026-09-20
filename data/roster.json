@@ -1,7 +1,7 @@
 {
-  "pulled_at": "2026-09-20T06:30:36Z",
+  "pulled_at": "2026-09-20T21:34:17Z",
   "source": "systemctl list-units tradebot_* --state=active on the trading host; risk caps read from the arguments of each running service, else from the config file it names (risk_cap / fallback_cap; target_vol = vol-targeted). Re-read on every daily refresh; differences are logged in changes.",
-  "count": 32,
+  "count": 33,
   "systems": [
     {
       "name": "BCO Brent Trend",
@@ -21,14 +21,14 @@
       "name": "DE30 Channel v9",
       "instrument": "DE30_EUR",
       "mechanism": "Intraday rolling-channel breakout, M1 source bars",
-      "risk_cap_pct": 0.25,
+      "risk_cap_pct": 0.2,
       "service": "tradebot_de30_eur_channel_v9"
     },
     {
       "name": "NAS100 Channel v9",
       "instrument": "NAS100_USD",
       "mechanism": "Rolling-channel breakout, M5 source bars",
-      "risk_cap_pct": 0.65,
+      "risk_cap_pct": 0.2,
       "service": "tradebot_nas100_usd_channel_v9"
     },
     {
@@ -49,14 +49,14 @@
       "name": "NAS100 Swing Chan",
       "instrument": "NAS100_USD",
       "mechanism": "576-bar rolling channel, gated by a peer volatility-regime filter",
-      "risk_cap_pct": 1.9,
+      "risk_cap_pct": 2.55,
       "service": "tradebot_factory_v3_x_swing_chan_nas100"
     },
     {
       "name": "NAS100 Vol Brk",
       "instrument": "NAS100_USD",
       "mechanism": "Volatility-expansion breakout (2.2x realised-vol ratio), same regime gate",
-      "risk_cap_pct": 3.5,
+      "risk_cap_pct": 1.8,
       "service": "tradebot_factory_v3_x_volbrk_nas100"
     },
     {
@@ -84,7 +84,7 @@
       "name": "JP225 Chan96 Breakout",
       "instrument": "JP225_USD",
       "mechanism": "96-bar channel breakout",
-      "risk_cap_pct": 0.45,
+      "risk_cap_pct": 0.2,
       "service": "tradebot_jp225_usd_camp2_chan96"
     },
     {
@@ -136,7 +136,7 @@
       "name": "Gold Momentum Cont",
       "instrument": "XAU_USD",
       "mechanism": "Momentum continuation",
-      "risk_cap_pct": 1.4,
+      "risk_cap_pct": 1.5,
       "service": "tradebot_momcont_xau"
     },
     {
@@ -194,43 +194,50 @@
       "name": "momcont_de30",
       "instrument": "DE30_EUR",
       "mechanism": "description pending - a live service the roster had no row for",
-      "risk_cap_pct": 0.5,
+      "risk_cap_pct": 0.0,
       "service": "tradebot_momcont_de30"
     },
     {
       "name": "momcont_nas100",
       "instrument": "NAS100_USD",
       "mechanism": "description pending - a live service the roster had no row for",
-      "risk_cap_pct": 0.5,
+      "risk_cap_pct": 0.0,
       "service": "tradebot_momcont_nas100"
     },
     {
       "name": "momcont_usdjpy",
       "instrument": "USD_JPY",
       "mechanism": "description pending - a live service the roster had no row for",
-      "risk_cap_pct": 0.5,
+      "risk_cap_pct": 0.0,
       "service": "tradebot_momcont_usdjpy"
     },
     {
       "name": "usdjpy_camp2_chan96",
       "instrument": "USD_JPY",
       "mechanism": "description pending - a live service the roster had no row for",
-      "risk_cap_pct": 1.4,
+      "risk_cap_pct": 1.6,
       "service": "tradebot_usdjpy_camp2_chan96"
     },
     {
       "name": "x_donch_us30",
       "instrument": "US30_USD",
       "mechanism": "description pending - a live service the roster had no row for",
-      "risk_cap_pct": 0.5,
+      "risk_cap_pct": 1.1,
       "service": "tradebot_x_donch_us30"
     },
     {
       "name": "x_vclimax_nas100",
       "instrument": "NAS100_USD",
       "mechanism": "description pending - a live service the roster had no row for",
-      "risk_cap_pct": 0.25,
+      "risk_cap_pct": 0.5,
       "service": "tradebot_x_vclimax_nas100"
+    },
+    {
+      "name": "x_hkshort_hk33",
+      "instrument": "HK33_HKD",
+      "mechanism": "description pending - a live service the roster had no row for",
+      "risk_cap_pct": 3.0,
+      "service": "tradebot_x_hkshort_hk33"
     }
   ],
   "changes": [
@@ -461,6 +468,84 @@
       "change": "added",
       "system": "x_vclimax_nas100",
       "note": "live service with no roster row; cap 0.25% (fallback_cap in x_vclimax_nas100.json); description pending"
+    },
+    {
+      "date": "2026-09-20",
+      "change": "re-capped",
+      "system": "DE30 Channel v9",
+      "note": "risk cap 0.25% -> 0.2%, read from the running service (--max-risk-cap of the running process)"
+    },
+    {
+      "date": "2026-09-20",
+      "change": "re-capped",
+      "system": "NAS100 Channel v9",
+      "note": "risk cap 0.65% -> 0.2%, read from the running service (--max-risk-cap of the running process)"
+    },
+    {
+      "date": "2026-09-20",
+      "change": "re-capped",
+      "system": "NAS100 Swing Chan",
+      "note": "risk cap 1.9% -> 2.55%, read from the running service (fallback_cap in x_swing_chan_nas100.json)"
+    },
+    {
+      "date": "2026-09-20",
+      "change": "re-capped",
+      "system": "NAS100 Vol Brk",
+      "note": "risk cap 3.5% -> 1.8%, read from the running service (fallback_cap in x_volbrk_nas100.json)"
+    },
+    {
+      "date": "2026-09-20",
+      "change": "re-capped",
+      "system": "JP225 Chan96 Breakout",
+      "note": "risk cap 0.45% -> 0.2%, read from the running service (risk_cap in locked_jp225_usd_camp2_chan96_20260812.json)"
+    },
+    {
+      "date": "2026-09-20",
+      "change": "re-capped",
+      "system": "Gold Momentum Cont",
+      "note": "risk cap 1.4% -> 1.5%, read from the running service (risk_cap in momcont_xau.json)"
+    },
+    {
+      "date": "2026-09-20",
+      "change": "re-capped",
+      "system": "momcont_de30",
+      "note": "risk cap 0.5% -> 0%, read from the running service (risk_cap in momcont_de30.json)"
+    },
+    {
+      "date": "2026-09-20",
+      "change": "re-capped",
+      "system": "momcont_nas100",
+      "note": "risk cap 0.5% -> 0%, read from the running service (risk_cap in momcont_nas100.json)"
+    },
+    {
+      "date": "2026-09-20",
+      "change": "re-capped",
+      "system": "momcont_usdjpy",
+      "note": "risk cap 0.5% -> 0%, read from the running service (risk_cap in momcont_usdjpy.json)"
+    },
+    {
+      "date": "2026-09-20",
+      "change": "re-capped",
+      "system": "usdjpy_camp2_chan96",
+      "note": "risk cap 1.4% -> 1.6%, read from the running service (risk_cap in locked_usdjpy_camp2_chan96_20260918.json)"
+    },
+    {
+      "date": "2026-09-20",
+      "change": "re-capped",
+      "system": "x_donch_us30",
+      "note": "risk cap 0.5% -> 1.1%, read from the running service (fallback_cap in x_donch_us30.json)"
+    },
+    {
+      "date": "2026-09-20",
+      "change": "re-capped",
+      "system": "x_vclimax_nas100",
+      "note": "risk cap 0.25% -> 0.5%, read from the running service (fallback_cap in x_vclimax_nas100.json)"
+    },
+    {
+      "date": "2026-09-20",
+      "change": "added",
+      "system": "x_hkshort_hk33",
+      "note": "live service with no roster row; cap 3% (fallback_cap in x_hkshort_hk33.json); description pending"
     }
   ]
 }
