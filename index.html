@@ -151,9 +151,9 @@
         never traded before this record began. Percentages on an account this size
         swing hard and do not transfer to a larger one. Read the £ column.</li>
       <li><strong>Money paid in or taken out is not performance.</strong> Every
-        transfer is listed in the summary and subtracted from the return figures,
-        so a withdrawal never shows up as a loss. The balance chart still steps at
-        the moment it happens.</li>
+        transfer is listed under the balance tile and subtracted from the return
+        figures, so a withdrawal never shows up as a loss. The balance chart nets
+        transfers out: a withdrawal and a matching deposit leave no step in the line.</li>
       <li><strong>Anything left of the publication marker was already known</strong>
         when this page went up, and is shaded. If nothing is shaded, nothing was.</li>
       <li><strong>Open positions are excluded from realised P&amp;L</strong> and can
@@ -167,7 +167,8 @@
     <h2 class="title">Account balance</h2>
     <p class="caption">Stamped by the broker after every transaction — not
       reconstructed from trade P&amp;L. Closed trades only; open positions are not
-      in this line.</p>
+      in this line. Money paid in or taken out is netted out of the line, so it shows
+      trading alone; the transfers themselves are listed under the balance tile.</p>
     <div class="chart-holder">
       <div class="chart-scroll" id="chart-scroll"></div>
       <div class="tip" id="tip"></div>
@@ -290,7 +291,7 @@ async function load() {
       <div class="foot">${t.foot}</div>
     </div>`).join("");
 
-  drawChart(equity, meta);
+  drawChart(equity, meta, summary.capital_flows_in_window || []);
 
   document.querySelector("#trades tbody").innerHTML = trades.length === 0
     ? `<tr><td colspan="8" class="tag">No closed trades yet — the record opens ${fmtFull(summary.record_start)} and the first fill will appear here.</td></tr>`
@@ -348,10 +349,18 @@ function renderRoster(roster) {
   }
 }
 
-function drawChart(rows, meta) {
+function drawChart(rows, meta, flows) {
   const W = 960, H = 360, mL = 62, mR = 66, mT = 26, mB = 34;
+  // Transfers are money moving, not trading. The broker stamps the balance after each
+  // transfer, so the raw series steps at every one; the line shown here subtracts every
+  // transfer from that point on (a withdrawal and a matching deposit net to zero and
+  // leave no step). The transfers stay listed under the balance tile.
+  const fl = (flows || []).map(f => ({ t: Date.parse(f.time), a: parseFloat(f.amount) }))
+                          .filter(f => isFinite(f.t) && isFinite(f.a));
+  const netFlowsBy = t => fl.reduce((acc, f) => acc + (f.t <= t ? f.a : 0), 0);
   const pts = rows.map(r => ({ t: Date.parse(r.time), v: parseFloat(r.balance) }))
-                  .filter(p => isFinite(p.t) && isFinite(p.v));
+                  .filter(p => isFinite(p.t) && isFinite(p.v))
+                  .map(p => ({ t: p.t, v: p.v - netFlowsBy(p.t) }));
   if (!pts.length) return;
 
   const t0 = pts[0].t, t1 = pts[pts.length - 1].t;
