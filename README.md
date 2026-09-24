@@ -1,151 +1,37 @@
-# Live fleet track record
+# Fleet track record
 
-A public, append-only record of 23 automated trading systems running on one live
-OANDA account, every one of them sized. (Until 2026-09-24 nine more ran at a 0% risk
-cap; they traded nothing and were switched off that day, along with three others.)
+The live record of the automated trading systems I run on one OANDA account, in pounds. Every trade
+closed since 6 September 2026 is in here.
 
-**The record opens 2026-09-06 and never moves.** It tracks one broker account,
-`001-004-19806960-002`, which was funded on 2026-09-04 with £2,000.00 and had
-never placed a trade before this record began. £250.00 was withdrawn on
-2026-09-09 and paid back in on 2026-09-17, so £2,000.00 is at work; both
-transfers are disclosed in [`data/summary.json`](data/summary.json) and neither is ever counted as performance. Every closed trade from the
-opening moment on appears here, win or lose, with no bot excluded and no window
-re-chosen. The roster is published in [`ROSTER.md`](ROSTER.md) with the live risk
-cap each system actually runs.
+Page: https://jagoh41.github.io/fleet-track-record/
 
-📈 **[View the record →](https://jagoh41.github.io/fleet-track-record/)**
+Every 15 minutes the trading server reads the account from OANDA's API with `update.py` (GET requests
+only) and commits anything that changed, so the history shows what the account looked like at each point.
 
----
+## Files
 
-## Read this before you read the numbers
+- `data/closed_trades.csv`: every closed trade, with OANDA's trade ID
+- `data/equity.csv`: the balance after each transaction, as OANDA reports it
+- `data/summary.json`: headline numbers, transfers in and out, refused orders
+- `data/roster.json`: the systems running now, their risk caps, and a dated log of changes
+- `data/meta.json`: when the record starts and when it went public
 
-**This record is days old, not years old.** Nothing here is statistically
-meaningful yet. A profit factor computed on twenty trades is a description of
-twenty trades, not evidence of an edge.
+## Notes
 
-**The account is small — £2,000.00 at the open and £2,000.00 at work (a
-£250.00 withdrawal on 2026-09-09 was returned on 2026-09-17).** Percentage returns on an account this size swing
-violently and do not transfer to a larger one. The £ column is the honest one;
-the % column is arithmetic.
+- The account (001-004-19806960-002) was funded with £2,000 on 4 September 2026 and had never traded.
+  The record starts at 00:00 UTC on 6 September and went public at 13:25 UTC that day, before the first
+  trade.
+- £250 was withdrawn on 9 September and paid back on 17 September. Transfers are left out of the chart
+  and the returns.
+- The figures are for the whole account. Most orders reach OANDA without a system tag, so there's no
+  reliable split by system.
+- The systems share the account's margin. When the index systems are using most of it, OANDA turns down
+  new orders, and those never become trades. `margin_refusals` in `summary.json` counts them.
+- Systems get added, stopped and resized. Each change is logged in `roster.json` with its date.
+- It's a few weeks of data on a small account, so it doesn't prove much yet.
 
-**The publication marker is the only line that matters.** `data/meta.json`
-carries `published_at`, set once when this repository first went public and
-never changed. Anything before that marker was already known when the page went
-up and is shaded **backfilled** on the chart; anything after it was unknown at
-the moment of publishing. If the marker precedes the account's first trade, the
-record is forward in its entirety and the shaded band is empty — check the
-marker against the first row of `data/closed_trades.csv` rather than taking
-that on trust.
+[Myfxbook](https://www.myfxbook.com/members/jagoh41/live20from20september202026/12183574) also tracks
+the account, but it hasn't updated since 9 September because of a fault on their side, which has been
+reported.
 
-**Several positions are usually open at once** — a median of nine at any hour since
-the record opened, six at the latest refresh. Unrealised P&L is reported separately
-from realised and can reverse entirely. Any figure that blends the two is marked
-as doing so.
-
-## How to verify it
-
-The point of a track record is that you do not have to take the author's word for
-it, so there are three independent layers:
-
-1. **Broker verification** — [the account on Myfxbook](https://www.myfxbook.com/members/jagoh41/live20from20september202026/12183574),
-   a third-party read-only view fed directly by the broker API rather than by me.
-   Myfxbook shows both its **track record** and **trading privileges** checks as
-   verified. It updates on its own schedule, so it can lag this page by a few hours.
-   **Since 2026-09-09 04:24 UK time it has not updated at all:** the stall is on
-   Myfxbook's side (another public OANDA account there froze at the same minute, and
-   Myfxbook still shows the connection as active); it was reported to Myfxbook support
-   on 2026-09-24. Until it resumes, its figures stop at that date. Layers 2 and 3 below
-   do not depend on it.
-2. **The raw data** — [`data/closed_trades.csv`](data/closed_trades.csv) is every
-   closed trade with broker trade IDs, entry and exit prices, and realised P&L.
-   [`data/equity.csv`](data/equity.csv) is the account balance stamped by the
-   broker after each transaction, not reconstructed by me.
-3. **The commit history** — this repository is append-only. Each refresh is a
-   commit with a timestamp. If a losing day were ever quietly removed, the diff
-   would show it. Read the history, not just the current state.
-
-## What is published, and what is not
-
-**Published:** every closed trade, the account balance series, the full roster,
-each system's instrument, its live risk cap, and a plain-English description of
-its mechanism.
-
-**Not published:** strategy parameters, entry and exit logic, and source code. The
-descriptions in [`ROSTER.md`](ROSTER.md) say what family each system belongs to and
-what it trades — enough to judge whether the roster is diversified or whether eight
-systems are quietly making the same bet, which is the question that actually
-matters.
-
-## Known weaknesses
-
-Listed here because a track record that only publishes its strengths is marketing.
-
-- **There is no per-bot P&L breakdown, and there cannot be one yet.** Most orders
-  reach the broker without a bot tag, so the broker's own records cannot say which
-  system placed which trade. Splitting the P&L 23 ways would mean falling back on
-  self-reported logs, which is exactly the sort of unverifiable claim this record
-  exists to avoid. Account-level figures are the only ones that are fully
-  verifiable, so account-level is all that is reported. Per-bot attribution starts
-  the day tagging ships, and not one day earlier.
-- **The index systems can exhaust the account's margin.** Six of the 23 trade
-  NAS100 (five of their own plus a VRP leg) and several more trade other indices; during the US session their
-  positions can use most of the account's margin at once. When that happens the
-  broker refuses later orders — typically the metals systems — for insufficient
-  margin. A refused order never becomes a trade, so it never appears in the
-  trade list: the record shows what the fleet *did*, not what it tried to do.
-  The count of in-window margin refusals is published in
-  [`data/summary.json`](data/summary.json) as `margin_refusals` so the effect is
-  measurable rather than asserted.
-- **Live fills are not backtest fills.** Slippage and the netting above are paid in
-  cash on this account. This record measures the live side of that, which is the
-  side that pays.
-- **The roster can change.** Any system added, removed or re-capped after the
-  record opened gets a dated entry in `data/roster.json` in the commit that makes
-  the change, and its trades up to that point stay in the record. See
-  [`ROSTER.md`](ROSTER.md).
-- **The systems were re-examined walk-forward in September 2026, and it changed
-  the fleet.** Each system's rule-building process was re-run in anchored yearly
-  folds (fit through year Y, trade year Y+1 blind). Several hand-tuned systems
-  produced no honest record that way and now run at 0%; since 2026-09-17 the risk
-  caps are sized on those walk-forward records rather than on each system's own
-  tuning history; the systems added since 2026-09-18 were built the same way, and
-  on 2026-09-20 three of them were set to 0% after their 2026 stretch failed the
-  fleet's own tests. On 2026-09-23 six systems built by moving proven rules to new
-  instruments were deployed, and four were switched off 24 minutes later when their
-  2026 records to date failed a check registered before deployment (none of the four
-  had traded). On 2026-09-24 the nine 0% systems were switched off, along with the
-  NAS100 opening-range system (its record after its tuning period was flat), the HK33
-  cash short (it did not hedge the fleet's losing days) and the NAS100 volume-climax
-  system (a change in the broker's data feed had stopped it firing), and the caps were
-  re-sized twice. Every one of those changes is a dated entry in
-  `data/roster.json`. The old sizing basis overstated; this record measures the
-  fleet as it is actually sized, not as it was once expected to perform.
-
-## Method
-
-- **Source:** the OANDA v3 API, read-only. [`update.py`](update.py) issues GET
-  requests only and cannot place, modify or close a trade.
-- **Currency:** GBP, the account's own denomination. No conversion is applied.
-- **Realised P&L** is the broker's `realizedPL` per closed trade. **Financing**
-  (swap) is reported separately and is not netted into trade P&L.
-- **The balance series** uses the broker's `accountBalance` stamp on each
-  transaction. It is not reconstructed from trade P&L.
-- **Deposits and withdrawals** inside the window are listed in
-  [`data/summary.json`](data/summary.json) and annotated on the chart, because a
-  transfer moves the balance without a trade. They are **subtracted from every
-  return figure**: `net_capital_flows_in_window` carries the signed total,
-  `capital_contributed` is the money at work, and the NAV-based returns are
-  computed with the flows removed, so a withdrawal can never be published as a
-  loss. There were none at publication; £250.00 was withdrawn on 2026-09-09 and paid
-  back in on 2026-09-17.
-- **Refresh:** a timer on the trading host runs `update.py` daily at 06:30 UTC and
-  commits the three data files; a manual refresh is the same command,
-  `python update.py --env-file <path outside this repo>`, then commit. Credentials are never read from, or written into, this repository.
-
-## Disclaimer
-
-This is a personal engineering project, published as a record of what these
-systems actually did. It is not investment advice, not a solicitation, not an
-offer to manage money, and not a signal service. Nothing here is a
-recommendation to trade anything. Automated trading loses money for most people
-who attempt it.
+Personal project, not investment advice.

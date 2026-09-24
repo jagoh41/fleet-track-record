@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Refresh the public track record from the broker.
+"""Pull the public track record from OANDA.
 
-READ-ONLY. This script issues GET requests only: it can never place, modify or
-close a trade. Credentials are read from the environment (or from a file OUTSIDE
-this repo via --env-file) and are never written to any output.
+Only GET requests, so it can't place, change or close a trade. The API key comes
+from the environment or from an env file kept outside this repo, and is never
+written to any output.
 
 Usage:
     python update.py --env-file ../m1spy/.env
@@ -18,16 +18,12 @@ import sys
 from urllib.request import Request, urlopen
 from urllib.parse import urlencode
 
-# The public record starts here. Fixed at publication; never moves.
+# Start of the public record. Fixed when the record was published.
 START = dt.datetime(2026, 9, 6, 0, 0, tzinfo=dt.timezone.utc)
-# The record tracks exactly one broker account, pinned here so the data can
-# never silently follow a config change. This is an account id, not a credential.
+# The one account the record follows, hard-coded so a config change can't move it.
 ACCOUNT = "001-004-19806960-002"
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(HERE, "data")
-
-SQ = chr(39)   # single quote, kept out of literals so this file stays shell-safe
-DQ = chr(34)
 
 
 def load_env(path=None):
@@ -38,8 +34,8 @@ def load_env(path=None):
                 line = line.strip()
                 if line and not line.startswith("#") and "=" in line:
                     k, v = line.split("=", 1)
-                    env.setdefault(k.strip(), v.strip().strip(DQ).strip(SQ))
-        # mirror the live/practice prefix convention of the trading stack
+                    env.setdefault(k.strip(), v.strip().strip('"').strip("'"))
+        # the trading code keeps live and practice keys under different prefixes
         mode = env.get("OANDA_ENV", "live").lower()
         pref = "OANDA_PRACTICE_" if mode == "practice" else "OANDA_LIVE_"
         if env.get(pref + "API_KEY"):
@@ -59,7 +55,7 @@ def ts(s):
 
 
 class Broker:
-    """Read-only OANDA client. Every method here is a GET."""
+    """Minimal OANDA v20 client. Every method is a GET."""
 
     def __init__(self, env):
         mode = env.get("OANDA_ENV", "live").lower()
@@ -127,11 +123,10 @@ def main():
     ccy = acct.get("currency", "GBP")
     lc = ccy.lower()
 
-    # ---- closed trades ----
+    # closed trades
     def bot_tag(t):
-        # The broker shows tag "0" (with an id/comment) on trades from several
-        # different systems: a shared bookkeeping stamp, not a bot identity.
-        # Report it as untagged so the tagged count means what it says.
+        # OANDA shows tag "0" on trades from several different systems, so "0"
+        # doesn't identify anything. Treat it as untagged.
         tag = (t.get("clientExtensions") or {}).get("tag", "")
         return "" if tag in ("", "0") else tag
 
@@ -153,8 +148,7 @@ def main():
             "bot_tag": bot_tag(t),
         })
     os.makedirs(DATA, exist_ok=True)
-    # Always rewrite, even with zero rows: a stale file from a previous run must
-    # never survive into a record that reports a different trade count.
+    # Rewrite the file even when there are no rows, so an old one can't linger.
     fields = ["close_time", "open_time", "instrument", "direction", "units",
               "entry_price", "exit_price", "realised_pl_" + lc, "financing_" + lc,
               "broker_trade_id", "bot_tag"]
@@ -164,7 +158,7 @@ def main():
         w.writeheader()
         w.writerows(rows)
 
-    # ---- balance series, straight off the broker own stamps ----
+    # balance after each transaction, as OANDA reports it
     txns = broker.transactions(START - dt.timedelta(days=21), now)
     opening = None
     series, flows = [], []
@@ -183,8 +177,7 @@ def main():
                           "amount": float(t.get("amount", 0)),
                           "reason": t.get("fundingReason", ""),
                           "in_window": when >= START})
-        # An order the broker refused for margin never becomes a trade, so the
-        # trade list cannot show it. Count them so the crowding-out is measurable.
+        # Orders refused for lack of margin never become trades, so count them here.
         if (t.get("type") == "ORDER_CANCEL" and t.get("reason") == "INSUFFICIENT_MARGIN"
                 and when >= START):
             margin_refusals += 1
@@ -198,10 +191,9 @@ def main():
         w.writeheader()
         w.writerows(series)
 
-    # ---- summary ----
+    # summary
     pls = [float(t.get("realizedPL", 0)) for t in trades]
-    # Capital flows INSIDE the window are money moving, never performance. Subtract them from the NAV-based return so a
-    # withdrawal cannot be published as a loss (2026-09-09: -250.00 was reading as -12 % of the account).
+    # Deposits and withdrawals aren't trading results, so they're taken out of the returns.
     net_flows = round(sum(f["amount"] for f in flows if f["in_window"]), 2)
     capital_contributed = round(opening + net_flows, 2)
     wins = [p for p in pls if p > 0]
@@ -230,15 +222,12 @@ def main():
         "open_trades": len(opens),
         "open_unrealised": round(sum(float(t.get("unrealizedPL", 0)) for t in opens), 2),
         "tagged_trades": sum(1 for r in rows if r["bot_tag"]),
-        # Deposits/withdrawals INSIDE the window would distort any return figure.
-        # The record covers this window only; nothing outside it is published.
         "capital_flows_in_window": [f for f in flows if f["in_window"]],
         "net_capital_flows_in_window": net_flows,
         "capital_contributed": capital_contributed,
         "margin_refusals": margin_refusals,
         "realised_return_pct_on_opening": (round(100.0 * sum(pls) / opening, 2)
                                            if opening else None),
-        # NAV return with capital flows removed: what the trading did, not what the bank transfer did.
         "nav_return_pct_on_opening": (round(100.0 * (nav - opening - net_flows) / opening, 2)
                                       if opening else None),
         "nav_return_pct_on_capital": (round(100.0 * (nav - capital_contributed) / capital_contributed, 2)
@@ -248,11 +237,8 @@ def main():
         json.dump(summary, f, indent=2)
         f.write("\n")
 
-    print(json.dumps(summary, indent=2))
-    print("\nwrote %d trades, %d balance points to %s" % (len(rows), len(series), DATA))
-    n_in = len(summary["capital_flows_in_window"])
-    if n_in:
-        print("!! %d capital flow(s) INSIDE the window - these MUST be disclosed" % n_in)
+    print("%d closed trades, %d balance points, balance %.2f, NAV %.2f, %d open"
+          % (len(rows), len(series), summary["balance"], summary["nav"], len(opens)))
 
 
 if __name__ == "__main__":
