@@ -15,6 +15,7 @@
   --link: #1f5ca8;
   --up: #1c7a3b;
   --down: #b42b20;
+  --shade: .13;
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -25,6 +26,7 @@
     --link: #82b1f2;
     --up: #63c585;
     --down: #ef8576;
+    --shade: .22;
   }
 }
 body {
@@ -55,8 +57,11 @@ figure { margin: 0; }
 #chart svg { display: block; width: 100%; height: auto; touch-action: pan-y; }
 .grid { stroke: var(--rule); }
 .start { stroke: var(--muted); stroke-dasharray: 3 4; }
-.line { fill: none; stroke: var(--link); stroke-width: 2; }
-.dot { fill: var(--link); }
+.gain { fill: var(--up); fill-opacity: var(--shade); }
+.loss { fill: var(--down); fill-opacity: var(--shade); }
+.line { fill: none; stroke: var(--text); stroke-width: 1.6; stroke-linejoin: round; }
+.cursor { stroke: var(--muted); opacity: 0; }
+.dot { fill: var(--text); }
 .label { fill: var(--muted); font-size: 12px; }
 
 .scroll { overflow-x: auto; }
@@ -97,9 +102,9 @@ footer p { margin-bottom: 8px; }
 
   <dl id="figures"></dl>
 
-  <h2>Balance</h2>
-  <p class="caption">OANDA's balance after each transaction, with transfers taken out so the line only moves with
-    trading. The dashed line is where it started.</p>
+  <h2>Account value</h2>
+  <p class="caption">Hourly, including open positions, with transfers taken out so the line only moves with trading.
+    Green is above the £2,000 it started with, red is below.</p>
   <figure>
     <p class="readout" id="readout"></p>
     <div id="chart"></div>
@@ -137,6 +142,8 @@ footer p { margin-bottom: 8px; }
   <ul>
     <li>It's a few weeks of data on a small account, so it doesn't prove much yet, and the percentages swing a lot.</li>
     <li id="flows" hidden></li>
+    <li>Account values before 24 Sep come from the trading server's own log, which read OANDA every minute (its balance
+      matches OANDA's balance stamps at every hour). Since then they're recorded at each refresh.</li>
     <li>The figures are for the whole account. Most orders reach OANDA without a system tag, so there's no reliable
       split by system.</li>
     <li>The systems share the account's margin. When the index systems are using most of it, OANDA turns down new
@@ -145,7 +152,8 @@ footer p { margin-bottom: 8px; }
 
   <footer>
     <p>Data files: <a href="data/closed_trades.csv">closed_trades.csv</a>, <a href="data/equity.csv">equity.csv</a>,
-      <a href="data/summary.json">summary.json</a>, <a href="data/roster.json">roster.json</a>. The code and the full
+      <a href="data/nav.csv">nav.csv</a>, <a href="data/summary.json">summary.json</a>,
+      <a href="data/roster.json">roster.json</a>. The code and the full
       history are on <a href="https://github.com/jagoh41/fleet-track-record">GitHub</a>.</p>
     <p><a href="https://www.myfxbook.com/members/jagoh41/live20from20september202026/12183574">Myfxbook</a> also tracks
       the account, but it hasn't updated since 9 September because of a fault on their side, which has been reported.</p>
@@ -191,9 +199,9 @@ async function load() {
   const v = Math.floor(Date.now() / 3e5);
   const get = f => fetch(`data/${f}?v=${v}`, { cache: "no-cache" })
     .then(r => { if (!r.ok) throw new Error(f); return f.endsWith(".json") ? r.json() : r.text(); });
-  let S, E, T, R;
+  let S, N, T, R;
   try {
-    [S, E, T, R] = await Promise.all([get("summary.json"), get("equity.csv"), get("closed_trades.csv"),
+    [S, N, T, R] = await Promise.all([get("summary.json"), get("nav.csv"), get("closed_trades.csv"),
       get("roster.json").catch(() => null)]);
   } catch (e) {
     $("#updated").textContent = "The data files didn't load. Try reloading the page.";
@@ -210,23 +218,25 @@ async function load() {
   }
   if (S.margin_refusals) $("#refusals").textContent = ` So far ${S.margin_refusals} orders have been turned down.`;
 
-  const eq = parseCsv(E);
-  chart(eq, flows);
+  const nav = parseCsv(N);
+  chart(nav, flows);
   let w = $("#chart").clientWidth, rt;
   addEventListener("resize", () => {
     clearTimeout(rt);
-    rt = setTimeout(() => { if ($("#chart").clientWidth !== w) { w = $("#chart").clientWidth; chart(eq, flows); } }, 150);
+    rt = setTimeout(() => { if ($("#chart").clientWidth !== w) { w = $("#chart").clientWidth; chart(nav, flows); } }, 150);
   });
   trades(parseCsv(T));
   if (R) roster(R);
 }
 
 function figures(S) {
-  const start = S.capital_contributed ?? S.opening_balance, chg = S.balance - start;
+  const start = S.capital_contributed ?? S.opening_balance, chg = S.nav - start;
   const avg = S.wins && S.losses ? `average win ${gbp(S.avg_win)}, average loss ${gbp(S.avg_loss)}` : "";
+  const open = S.open_trades ? `not counting ${S.open_trades} open position${S.open_trades === 1 ? "" : "s"} ` +
+    `(<span class="${cls(S.unrealised_pl)}">${signed(S.unrealised_pl)}</span>)` : "no positions open";
   const rows = [
-    ["Balance", money(S.balance), `<span class="${cls(chg)}">${signed(chg)} (${(chg / start * 100).toFixed(1)}%)</span> since ${day(S.record_start)}`],
-    ["Open positions", S.open_trades, `<span class="${cls(S.unrealised_pl)}">${signed(S.unrealised_pl)}</span> not yet realised`],
+    ["Account value", money(S.nav), `<span class="${cls(chg)}">${signed(chg)} (${(chg / start * 100).toFixed(1)}%)</span> since ${day(S.record_start)}`],
+    ["Balance", money(S.balance), open],
     ["Closed trades", S.closed_trades, `${S.wins} won, ${S.losses} lost`],
     ["Profit factor", S.profit_factor ?? "n/a", avg],
   ];
@@ -235,18 +245,18 @@ function figures(S) {
 
 function chart(rows, flows) {
   const el = $("#chart");
-  const W = Math.round(el.clientWidth) || 700, H = W < 520 ? 220 : 280;
+  const W = Math.round(el.clientWidth) || 700, H = W < 520 ? 230 : 300;
   const L = 52, R = 6, T = 10, B = 26, DAY = 864e5;
   // take transfers out from the moment they happen
   const moves = flows.map(f => [Date.parse(f.time), +f.amount]);
   const pts = rows.map(r => {
     const t = Date.parse(r.time);
-    return { t, v: +r.balance - moves.reduce((s, [ft, a]) => ft <= t ? s + a : s, 0) };
+    return { t, v: +r.nav - moves.reduce((s, [ft, a]) => ft <= t ? s + a : s, 0) };
   }).filter(p => isFinite(p.t) && isFinite(p.v));
   if (pts.length < 2) { el.textContent = "Not enough data for a chart yet."; return; }
 
-  const t0 = pts[0].t, t1 = pts[pts.length - 1].t, last = pts[pts.length - 1];
-  let lo = Math.min(...pts.map(p => p.v)), hi = Math.max(...pts.map(p => p.v));
+  const t0 = pts[0].t, t1 = pts[pts.length - 1].t, last = pts[pts.length - 1], base = pts[0].v;
+  let lo = Math.min(base, ...pts.map(p => p.v)), hi = Math.max(base, ...pts.map(p => p.v));
   const padv = (hi - lo) * 0.1 || 20; lo -= padv; hi += padv;
   const x = t => L + (t - t0) / (t1 - t0) * (W - L - R);
   const y = v => T + (hi - v) / (hi - lo) * (H - T - B);
@@ -256,34 +266,44 @@ function chart(rows, flows) {
   for (let t = Math.ceil(t0 / DAY) * DAY; t <= t1; t += every * DAY) xt.push(t);
   const anchor = px => px < L + 18 ? "start" : px > W - R - 18 ? "end" : "middle";
 
-  // a balance holds its value until the next transaction, so draw steps
-  let d = `M${x(t0).toFixed(1)},${y(pts[0].v).toFixed(1)}`;
-  for (const p of pts.slice(1)) d += `H${x(p.t).toFixed(1)}V${y(p.v).toFixed(1)}`;
+  // the area between the line and the starting value, shaded green above it and red below
+  const yb = y(base).toFixed(1);
+  const d = pts.map((p, i) => (i ? "L" : "M") + x(p.t).toFixed(1) + "," + y(p.v).toFixed(1)).join("");
+  const area = `${d}L${x(t1).toFixed(1)},${yb}L${x(t0).toFixed(1)},${yb}Z`;
 
-  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Balance, ${day(t0)} to ${day(t1)}">
+  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Account value, ${day(t0)} to ${day(t1)}">
+    <defs><clipPath id="above"><rect width="${W}" height="${yb}"/></clipPath>
+      <clipPath id="below"><rect y="${yb}" width="${W}" height="${H}"/></clipPath></defs>
     ${yt.map(v => `<line class="grid" x1="${L}" x2="${W - R}" y1="${y(v).toFixed(1)}" y2="${y(v).toFixed(1)}"/>
       <text class="label" x="${L - 8}" y="${(y(v) + 4).toFixed(1)}" text-anchor="end">£${v.toLocaleString("en-GB")}</text>`).join("")}
     ${xt.map(t => `<text class="label" x="${x(t).toFixed(1)}" y="${H - 6}" text-anchor="${anchor(x(t))}">${day(t)}</text>`).join("")}
-    <line class="start" x1="${L}" x2="${W - R}" y1="${y(pts[0].v).toFixed(1)}" y2="${y(pts[0].v).toFixed(1)}"/>
+    <path class="gain" d="${area}" clip-path="url(#above)"/>
+    <path class="loss" d="${area}" clip-path="url(#below)"/>
+    <line class="start" x1="${L}" x2="${W - R}" y1="${yb}" y2="${yb}"/>
     <path class="line" d="${d}"/>
+    <line class="cursor" y1="${T}" y2="${H - B}"/>
     <circle class="dot" r="3.5"/>
   </svg>`;
 
-  const svg = el.querySelector("svg"), dot = svg.querySelector(".dot");
-  const show = (p, t) => {
+  const svg = el.querySelector("svg"), dot = svg.querySelector(".dot"), cur = svg.querySelector(".cursor");
+  const show = (p, hover) => {
     $("#readout").textContent = `${day(p.t)} ${hm(p.t)} UTC: ${money(p.v)}`;
-    dot.setAttribute("cx", x(t).toFixed(1));
+    const px = x(p.t).toFixed(1);
+    dot.setAttribute("cx", px);
     dot.setAttribute("cy", y(p.v).toFixed(1));
+    cur.setAttribute("x1", px);
+    cur.setAttribute("x2", px);
+    cur.style.opacity = hover ? 1 : 0;
   };
-  show(last, t1);
+  show(last, false);
   svg.addEventListener("pointermove", e => {
     const r = svg.getBoundingClientRect();
-    const t = Math.min(t1, Math.max(t0, t0 + ((e.clientX - r.left) * W / r.width - L) / (W - L - R) * (t1 - t0)));
+    const t = t0 + ((e.clientX - r.left) * W / r.width - L) / (W - L - R) * (t1 - t0);
     let p = pts[0];
-    for (const q of pts) { if (q.t > t) break; p = q; }
-    show(p, t);
+    for (const q of pts) if (Math.abs(q.t - t) < Math.abs(p.t - t)) p = q;
+    show(p, true);
   });
-  svg.addEventListener("pointerleave", () => show(last, t1));
+  svg.addEventListener("pointerleave", () => show(last, false));
 }
 
 function niceStep(raw) {

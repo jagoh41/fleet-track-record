@@ -12,6 +12,7 @@ only) and commits anything that changed, so the history shows what the account l
 
 - `data/closed_trades.csv`: every closed trade, with OANDA's trade ID
 - `data/equity.csv`: the balance after each transaction, as OANDA reports it
+- `data/nav.csv`: the account value including open positions, hourly (from the trading server's own log before 24 September)
 - `data/summary.json`: headline numbers, transfers in and out, refused orders
 - `data/roster.json`: the systems running now, their risk caps, and a dated log of changes
 - `data/meta.json`: when the record starts and when it went public

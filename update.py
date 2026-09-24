@@ -237,6 +237,24 @@ def main():
         json.dump(summary, f, indent=2)
         f.write("\n")
 
+    # account value (NAV), one row per UTC hour: the latest reading replaces the
+    # current hour's row, and an unchanged value writes nothing
+    nav_path = os.path.join(DATA, "nav.csv")
+    navs = []
+    if os.path.exists(nav_path):
+        with open(nav_path, encoding="utf-8") as f:
+            navs = [(r["time"], r["nav"]) for r in csv.DictReader(f)]
+    stamp, value = now.strftime("%Y-%m-%dT%H:%M:%SZ"), "%.2f" % nav
+    if not navs or navs[-1][1] != value:
+        if navs and navs[-1][0][:13] == stamp[:13]:
+            navs[-1] = (stamp, value)
+        else:
+            navs.append((stamp, value))
+        with open(nav_path, "w", newline="", encoding="utf-8") as f:
+            w = csv.writer(f, lineterminator="\n")
+            w.writerow(["time", "nav"])
+            w.writerows(navs)
+
     print("%d closed trades, %d balance points, balance %.2f, NAV %.2f, %d open"
           % (len(rows), len(series), summary["balance"], summary["nav"], len(opens)))
 
