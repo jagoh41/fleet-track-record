@@ -1,7 +1,7 @@
 {
-  "pulled_at": "2026-09-23T06:30:56Z",
+  "pulled_at": "2026-09-24T06:31:36Z",
   "source": "systemctl list-units tradebot_* --state=active on the trading host; risk caps read from the arguments of each running service, else from the config file it names (risk_cap / fallback_cap; target_vol = vol-targeted). Re-read on every daily refresh; differences are logged in changes.",
-  "count": 33,
+  "count": 35,
   "systems": [
     {
       "name": "BCO Brent Trend",
@@ -238,6 +238,20 @@
       "mechanism": "Shorts the Hong Kong cash session after an up day in the US session; a hedge-like system that loses in most years and pays in the years the rest of the fleet loses",
       "risk_cap_pct": 3.0,
       "service": "tradebot_x_hkshort_hk33"
+    },
+    {
+      "name": "jp225_camp2_chan96_tp12",
+      "instrument": "JP225_USD",
+      "mechanism": "description pending - a live service the roster had no row for",
+      "risk_cap_pct": 1.0,
+      "service": "tradebot_jp225_camp2_chan96_tp12"
+    },
+    {
+      "name": "x_rchan_ch20",
+      "instrument": "CH20_CHF",
+      "mechanism": "description pending - a live service the roster had no row for",
+      "risk_cap_pct": 2.5,
+      "service": "tradebot_x_rchan_ch20"
     }
   ],
   "changes": [
@@ -546,6 +560,18 @@
       "change": "added",
       "system": "x_hkshort_hk33",
       "note": "live service with no roster row; cap 3% (fallback_cap in x_hkshort_hk33.json); description pending"
+    },
+    {
+      "date": "2026-09-24",
+      "change": "added",
+      "system": "jp225_camp2_chan96_tp12",
+      "note": "live service with no roster row; cap 1% (risk_cap in locked_jp225_camp2_chan96_tp12_20260924.json); description pending"
+    },
+    {
+      "date": "2026-09-24",
+      "change": "added",
+      "system": "x_rchan_ch20",
+      "note": "live service with no roster row; cap 2.5% (fallback_cap in x_rchan_ch20.json); description pending"
     }
   ]
 }
