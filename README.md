@@ -1,8 +1,8 @@
 # Live fleet track record
 
-A public, append-only record of 33 automated trading systems running on one live
-OANDA account — 24 of them currently sized, the other nine running at a 0% risk cap
-so their forward record keeps accruing.
+A public, append-only record of 23 automated trading systems running on one live
+OANDA account, every one of them sized. (Until 2026-09-24 nine more ran at a 0% risk
+cap; they traded nothing and were switched off that day, along with three others.)
 
 **The record opens 2026-09-06 and never moves.** It tracks one broker account,
 `001-004-19806960-002`, which was funded on 2026-09-04 with £2,000.00 and had
@@ -37,7 +37,8 @@ record is forward in its entirety and the shaded band is empty — check the
 marker against the first row of `data/closed_trades.csv` rather than taking
 that on trust.
 
-**Ten to fifteen positions are usually open.** Unrealised P&L is reported separately
+**Several positions are usually open at once** — a median of nine at any hour since
+the record opened, six at the latest refresh. Unrealised P&L is reported separately
 from realised and can reverse entirely. Any figure that blends the two is marked
 as doing so.
 
@@ -50,6 +51,11 @@ it, so there are three independent layers:
    a third-party read-only view fed directly by the broker API rather than by me.
    Myfxbook shows both its **track record** and **trading privileges** checks as
    verified. It updates on its own schedule, so it can lag this page by a few hours.
+   **Since 2026-09-09 04:24 UK time it has not updated at all:** the stall is on
+   Myfxbook's side (another public OANDA account there froze at the same minute, and
+   Myfxbook still shows the connection as active); it was reported to Myfxbook support
+   on 2026-09-24. Until it resumes, its figures stop at that date. Layers 2 and 3 below
+   do not depend on it.
 2. **The raw data** — [`data/closed_trades.csv`](data/closed_trades.csv) is every
    closed trade with broker trade IDs, entry and exit prices, and realised P&L.
    [`data/equity.csv`](data/equity.csv) is the account balance stamped by the
@@ -76,13 +82,13 @@ Listed here because a track record that only publishes its strengths is marketin
 
 - **There is no per-bot P&L breakdown, and there cannot be one yet.** Most orders
   reach the broker without a bot tag, so the broker's own records cannot say which
-  system placed which trade. Splitting the P&L 33 ways would mean falling back on
+  system placed which trade. Splitting the P&L 23 ways would mean falling back on
   self-reported logs, which is exactly the sort of unverifiable claim this record
   exists to avoid. Account-level figures are the only ones that are fully
   verifiable, so account-level is all that is reported. Per-bot attribution starts
   the day tagging ships, and not one day earlier.
-- **The index systems can exhaust the account's margin.** Nine of the 33 trade
-  NAS100 (eight of their own plus a VRP leg) and several more trade other US indices; during the US session their
+- **The index systems can exhaust the account's margin.** Six of the 23 trade
+  NAS100 (five of their own plus a VRP leg) and several more trade other indices; during the US session their
   positions can use most of the account's margin at once. When that happens the
   broker refuses later orders — typically the metals systems — for insufficient
   margin. A refused order never becomes a trade, so it never appears in the
@@ -104,7 +110,14 @@ Listed here because a track record that only publishes its strengths is marketin
   caps are sized on those walk-forward records rather than on each system's own
   tuning history; the systems added since 2026-09-18 were built the same way, and
   on 2026-09-20 three of them were set to 0% after their 2026 stretch failed the
-  fleet's own tests. Every one of those changes is a dated entry in
+  fleet's own tests. On 2026-09-23 six systems built by moving proven rules to new
+  instruments were deployed, and four were switched off 24 minutes later when their
+  2026 records to date failed a check registered before deployment (none of the four
+  had traded). On 2026-09-24 the nine 0% systems were switched off, along with the
+  NAS100 opening-range system (its record after its tuning period was flat), the HK33
+  cash short (it did not hedge the fleet's losing days) and the NAS100 volume-climax
+  system (a change in the broker's data feed had stopped it firing), and the caps were
+  re-sized twice. Every one of those changes is a dated entry in
   `data/roster.json`. The old sizing basis overstated; this record measures the
   fleet as it is actually sized, not as it was once expected to perform.
 

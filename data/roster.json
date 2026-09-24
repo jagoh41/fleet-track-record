@@ -155,16 +155,16 @@
       "service": "tradebot_x_donch_us30"
     },
     {
-      "name": "jp225_camp2_chan96_tp12",
+      "name": "JP225 Chan96 Breakout, closer target",
       "instrument": "JP225_USD",
-      "mechanism": "description pending - a live service the roster had no row for",
+      "mechanism": "The same 96-bar channel breakout entries as the JP225 breakout above, long side, with a closer profit target",
       "risk_cap_pct": 2.75,
       "service": "tradebot_jp225_camp2_chan96_tp12"
     },
     {
-      "name": "x_rchan_ch20",
+      "name": "CH20 Rolling Channel",
       "instrument": "CH20_CHF",
-      "mechanism": "description pending - a live service the roster had no row for",
+      "mechanism": "Rolling-channel breakout on the Swiss index, gated by a peer volatility-regime filter (the NAS100 swing-channel family, moved to CH20)",
       "risk_cap_pct": 3.6,
       "service": "tradebot_x_rchan_ch20"
     }
@@ -477,136 +477,184 @@
       "note": "live service with no roster row; cap 3% (fallback_cap in x_hkshort_hk33.json); description pending"
     },
     {
+      "date": "2026-09-23",
+      "change": "added",
+      "system": "SPX500 Opening Range",
+      "note": "deployed 23:03 UTC at a 2% cap (the NAS100 opening-range rule, moved to SPX500); switched off at 23:27 UTC, below"
+    },
+    {
+      "date": "2026-09-23",
+      "change": "added",
+      "system": "NAS100 Opening Drive",
+      "note": "deployed 23:03 UTC at 2.5% (follows a strong first bar of the US cash session); switched off at 23:27 UTC, below"
+    },
+    {
+      "date": "2026-09-23",
+      "change": "added",
+      "system": "DE30 Chan96 Breakout",
+      "note": "deployed 23:03 UTC at 1% (the USD/JPY channel-breakout rule, moved to DE30); switched off at 23:27 UTC, below"
+    },
+    {
+      "date": "2026-09-23",
+      "change": "added",
+      "system": "XAU/GBP Vol Breakout",
+      "note": "deployed 23:03 UTC at 3% (volatility-expansion breakout on gold priced in sterling); switched off at 23:27 UTC, below"
+    },
+    {
+      "date": "2026-09-23",
+      "change": "added",
+      "system": "JP225 Chan96 Breakout, closer target",
+      "note": "deployed 23:03 UTC at 1%; first read by the daily roster on 2026-09-24"
+    },
+    {
+      "date": "2026-09-23",
+      "change": "added",
+      "system": "CH20 Rolling Channel",
+      "note": "deployed 23:03 UTC at 2.5%; first read by the daily roster on 2026-09-24"
+    },
+    {
+      "date": "2026-09-23",
+      "change": "re-capped",
+      "system": "NAS100 ORB",
+      "note": "risk cap 0.85% -> 6% at 23:03 UTC; returned to 0.85% at 00:10 UTC on 2026-09-24"
+    },
+    {
+      "date": "2026-09-23",
+      "change": "stopped",
+      "system": "SPX500 Opening Range, NAS100 Opening Drive, DE30 Chan96 Breakout, XAU/GBP Vol Breakout",
+      "note": "switched off at 23:27 UTC, 24 minutes after deployment: their 2026 records to date failed a check registered before they were deployed. None of the four placed a trade."
+    },
+    {
       "date": "2026-09-24",
       "change": "added",
       "system": "jp225_camp2_chan96_tp12",
-      "note": "live service with no roster row; cap 1% (risk_cap in locked_jp225_camp2_chan96_tp12_20260924.json); description pending"
+      "note": "live service with no roster row; cap 1% (risk_cap in locked_jp225_camp2_chan96_tp12_20260924.json) (deployed 2026-09-23 23:03 UTC; named and described in the same day's roster edit)"
     },
     {
       "date": "2026-09-24",
       "change": "added",
       "system": "x_rchan_ch20",
-      "note": "live service with no roster row; cap 2.5% (fallback_cap in x_rchan_ch20.json); description pending"
+      "note": "live service with no roster row; cap 2.5% (fallback_cap in x_rchan_ch20.json) (deployed 2026-09-23 23:03 UTC; named and described in the same day's roster edit)"
     },
     {
       "date": "2026-09-24",
       "change": "re-capped",
       "system": "NAS100 Channel v9",
-      "note": "risk cap 0.2% -> 0.8%, read from the running service (--max-risk-cap of the running process)"
+      "note": "risk cap 0.2% -> 0.8%, read from the running service (--max-risk-cap of the running process) (the caps were re-sized at 09:24 and 12:08 UTC; this is the net change between the day's two roster reads)"
     },
     {
       "date": "2026-09-24",
       "change": "re-capped",
       "system": "NAS100 Swing Chan",
-      "note": "risk cap 2.55% -> 2.2%, read from the running service (fallback_cap in x_swing_chan_nas100.json)"
+      "note": "risk cap 2.55% -> 2.2%, read from the running service (fallback_cap in x_swing_chan_nas100.json) (the caps were re-sized at 09:24 and 12:08 UTC; this is the net change between the day's two roster reads)"
     },
     {
       "date": "2026-09-24",
       "change": "re-capped",
       "system": "NAS100 Vol Brk",
-      "note": "risk cap 1.8% -> 4.05%, read from the running service (fallback_cap in x_volbrk_nas100.json)"
+      "note": "risk cap 1.8% -> 4.05%, read from the running service (fallback_cap in x_volbrk_nas100.json) (the caps were re-sized at 09:24 and 12:08 UTC; this is the net change between the day's two roster reads)"
     },
     {
       "date": "2026-09-24",
       "change": "re-capped",
       "system": "BCO Momentum Cont",
-      "note": "risk cap 1.15% -> 3.65%, read from the running service (risk_cap in momcont_bco.json)"
+      "note": "risk cap 1.15% -> 3.65%, read from the running service (risk_cap in momcont_bco.json) (the caps were re-sized at 09:24 and 12:08 UTC; this is the net change between the day's two roster reads)"
     },
     {
       "date": "2026-09-24",
       "change": "re-capped",
       "system": "USDJPY Chan96 Breakout",
-      "note": "risk cap 1.6% -> 1.4%, read from the running service (risk_cap in locked_usdjpy_camp2_chan96_20260918.json)"
+      "note": "risk cap 1.6% -> 1.4%, read from the running service (risk_cap in locked_usdjpy_camp2_chan96_20260918.json) (the caps were re-sized at 09:24 and 12:08 UTC; this is the net change between the day's two roster reads)"
     },
     {
       "date": "2026-09-24",
       "change": "re-capped",
       "system": "US30 Donchian Breakout",
-      "note": "risk cap 1.1% -> 1.15%, read from the running service (fallback_cap in x_donch_us30.json)"
+      "note": "risk cap 1.1% -> 1.15%, read from the running service (fallback_cap in x_donch_us30.json) (the caps were re-sized at 09:24 and 12:08 UTC; this is the net change between the day's two roster reads)"
     },
     {
       "date": "2026-09-24",
       "change": "re-capped",
       "system": "jp225_camp2_chan96_tp12",
-      "note": "risk cap 1% -> 2.75%, read from the running service (risk_cap in locked_jp225_camp2_chan96_tp12_20260924.json)"
+      "note": "risk cap 1% -> 2.75%, read from the running service (risk_cap in locked_jp225_camp2_chan96_tp12_20260924.json) (the caps were re-sized at 09:24 and 12:08 UTC; this is the net change between the day's two roster reads)"
     },
     {
       "date": "2026-09-24",
       "change": "re-capped",
       "system": "x_rchan_ch20",
-      "note": "risk cap 2.5% -> 3.6%, read from the running service (fallback_cap in x_rchan_ch20.json)"
+      "note": "risk cap 2.5% -> 3.6%, read from the running service (fallback_cap in x_rchan_ch20.json) (the caps were re-sized at 09:24 and 12:08 UTC; this is the net change between the day's two roster reads)"
     },
     {
       "date": "2026-09-24",
       "change": "stopped",
       "system": "US30 Channel v9",
-      "note": "service no longer active on the host; removed from the roster"
+      "note": "service no longer active on the host; removed from the roster - switched off 10:47 UTC: it ran at a 0% cap and traded nothing"
     },
     {
       "date": "2026-09-24",
       "change": "stopped",
       "system": "SPX500 Channel v6 Rebuild",
-      "note": "service no longer active on the host; removed from the roster"
+      "note": "service no longer active on the host; removed from the roster - switched off 10:47 UTC: it ran at a 0% cap and traded nothing"
     },
     {
       "date": "2026-09-24",
       "change": "stopped",
       "system": "NAS100 ORB",
-      "note": "service no longer active on the host; removed from the roster"
+      "note": "service no longer active on the host; removed from the roster - switched off 11:21 UTC: its record after the period it was tuned on (2025-26) was flat, so the tuned edge did not hold"
     },
     {
       "date": "2026-09-24",
       "change": "stopped",
       "system": "SPX500 Chan24 Breakout",
-      "note": "service no longer active on the host; removed from the roster"
+      "note": "service no longer active on the host; removed from the roster - switched off 10:47 UTC: it ran at a 0% cap and traded nothing"
     },
     {
       "date": "2026-09-24",
       "change": "stopped",
       "system": "MR UK100 Dip",
-      "note": "service no longer active on the host; removed from the roster"
+      "note": "service no longer active on the host; removed from the roster - switched off 10:47 UTC: it ran at a 0% cap and traded nothing"
     },
     {
       "date": "2026-09-24",
       "change": "stopped",
       "system": "NATGAS POC v7",
-      "note": "service no longer active on the host; removed from the roster"
+      "note": "service no longer active on the host; removed from the roster - switched off 10:47 UTC: it ran at a 0% cap and traded nothing"
     },
     {
       "date": "2026-09-24",
       "change": "stopped",
       "system": "NZD FalseBreak Short",
-      "note": "service no longer active on the host; removed from the roster"
+      "note": "service no longer active on the host; removed from the roster - switched off 10:47 UTC: it ran at a 0% cap and traded nothing"
     },
     {
       "date": "2026-09-24",
       "change": "stopped",
       "system": "DE30 Momentum Cont",
-      "note": "service no longer active on the host; removed from the roster"
+      "note": "service no longer active on the host; removed from the roster - switched off 10:47 UTC: it ran at a 0% cap and traded nothing"
     },
     {
       "date": "2026-09-24",
       "change": "stopped",
       "system": "NAS100 Momentum Cont",
-      "note": "service no longer active on the host; removed from the roster"
+      "note": "service no longer active on the host; removed from the roster - switched off 10:47 UTC: it ran at a 0% cap and traded nothing"
     },
     {
       "date": "2026-09-24",
       "change": "stopped",
       "system": "USDJPY Momentum Cont",
-      "note": "service no longer active on the host; removed from the roster"
+      "note": "service no longer active on the host; removed from the roster - switched off 10:47 UTC: it ran at a 0% cap and traded nothing"
     },
     {
       "date": "2026-09-24",
       "change": "stopped",
       "system": "NAS100 Volume Climax",
-      "note": "service no longer active on the host; removed from the roster"
+      "note": "service no longer active on the host; removed from the roster - switched off 11:28 UTC: a change in the broker's data feed (tick volume several times higher since January 2026) stopped it firing after May"
     },
     {
       "date": "2026-09-24",
       "change": "stopped",
       "system": "HK33 Cash Short",
-      "note": "service no longer active on the host; removed from the roster"
+      "note": "service no longer active on the host; removed from the roster - switched off 11:21 UTC: it was added as a hedge and its returns turned out uncorrelated with the fleet's losing days"
     }
   ]
 }

@@ -1,6 +1,6 @@
 # The roster
 
-33 systems, running on one live OANDA account — 24 sized, nine at a 0% cap. There
+23 systems, running on one live OANDA account, every one of them sized. There
 is no second account, no paper sleeve, and nothing excluded from the record. The headline count on the
 page is read from the roster file, never typed in.
 
@@ -16,16 +16,17 @@ fraction of account equity risked between entry and stop on a single position.
 
 ## Notes that matter
 
-**Several systems run at a 0% cap.** They are live, they evaluate signals, and
-they will not size a position; they are listed because they are running, not
-because they trade. Their rows are muted on the page and the roster marks each
-one. A cap is set to zero when the fleet's sizing rules give a system no budget;
-the service keeps running so its forward record keeps accruing.
+**No system runs at a 0% cap any more.** Until 2026-09-24 nine did: they were live
+and evaluated signals but never sized a position, because the fleet's sizing rules
+gave them no budget. They were switched off that day and left the roster; their
+rows survive in the dated `changes` log. If a system is ever set to 0% again, its
+row is muted on the page.
 
-**Nine systems share NAS100 (eight of their own plus a VRP leg), and the index
+**Six systems share NAS100 (five of their own plus a VRP leg), and the index
 sleeve can crowd out the rest.** The NAS100 systems net into a single broker
 position, so the account's realised P&L on that instrument is not the sum of
-nine independent strategies. More importantly,
+six independent strategies; a system whose signal points the other way from a
+position another system already holds is skipped rather than netted against it. More importantly,
 the index systems together can use most of the account's margin during the US
 session, and orders that arrive after that point — usually the metals systems —
 are refused by the broker. `margin_refusals` in `data/summary.json` counts those
@@ -35,7 +36,7 @@ refusals inside the record window.
 target and only trades above £1,000 NAV, so it is not comparable to the per-trade
 percentages on the other rows.
 
-**Caps are per-position, not per-account.** With 33 systems live, simultaneous
+**Caps are per-position, not per-account.** With 23 systems live, simultaneous
 positions can and do stack. There is no global risk governor beyond broker margin.
 
 ## Roster changes since the record opened
@@ -56,8 +57,21 @@ system's own tuning history. Six systems built the same way were added on
 channel breakout, a US30 Donchian breakout), a NAS100 volume-climax system on
 2026-09-19 and an HK33 cash-session short on 2026-09-20. On 2026-09-20 the caps
 were re-cut twice and three of the new momentum systems (DE30, NAS100, USD/JPY)
-were set to 0% after their 2026 stretch failed the fleet's own tests. Nine
-systems now run at 0%.
+were set to 0% after their 2026 stretch failed the fleet's own tests.
+
+On 2026-09-23 at 23:03 UTC six systems built by moving proven rules to new
+instruments were deployed (an opening-range system on SPX500, an opening-drive
+system on NAS100, channel breakouts on DE30 and on JP225 with a closer target, a
+volatility breakout on gold in sterling and a rolling channel on the Swiss index),
+and the NAS100 opening-range system's cap was raised from 0.85% to 6%. At 23:27 UTC,
+24 minutes later, four of the six were switched off when their 2026 records to date
+failed a check registered before deployment; none of them had traded. The NAS100
+opening-range cap went back to 0.85% at 00:10 UTC. On 2026-09-24 the caps were
+re-sized at 09:24 UTC; the nine systems at 0% were switched off at 10:47; the NAS100
+opening-range system (its record after its tuning period was flat) and the HK33 cash
+short (it did not hedge the fleet's losing days) at 11:21; the NAS100 volume-climax
+system (a change in the broker's data feed had stopped it firing since May) at 11:28;
+and the caps were re-sized again at 12:08. The roster now holds 23 systems, all sized.
 
 Any future roster change gets a dated entry in `roster.json`, in the commit that
 makes it. That is the whole point of publishing the roster.
