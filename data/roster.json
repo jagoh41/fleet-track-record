@@ -1,5 +1,5 @@
 {
-  "pulled_at": "2026-09-25T19:32:30Z",
+  "pulled_at": "2026-09-25T19:47:30Z",
   "source": "Read from the trading host at every refresh: each risk cap comes from the running service's arguments or the config file it loads. Changes are logged with their date.",
   "count": 15,
   "systems": [
@@ -7,21 +7,21 @@
       "name": "NAS100 Channel v9",
       "instrument": "NAS100_USD",
       "mechanism": "Channel breakout, 5-minute bars",
-      "risk_cap_pct": 0.8,
+      "risk_cap_pct": 1.0,
       "service": "tradebot_nas100_usd_channel_v9"
     },
     {
       "name": "NAS100 Swing Chan",
       "instrument": "NAS100_USD",
       "mechanism": "576-bar channel breakout with a volatility filter",
-      "risk_cap_pct": 2.2,
+      "risk_cap_pct": 2.1,
       "service": "tradebot_factory_v3_x_swing_chan_nas100"
     },
     {
       "name": "NAS100 Vol Brk",
       "instrument": "NAS100_USD",
       "mechanism": "Breakout on a jump in volatility, with a regime filter",
-      "risk_cap_pct": 4.05,
+      "risk_cap_pct": 4.15,
       "service": "tradebot_factory_v3_x_volbrk_nas100"
     },
     {
@@ -65,7 +65,7 @@
       "name": "Gold Momentum Cont",
       "instrument": "XAU_USD",
       "mechanism": "Momentum continuation",
-      "risk_cap_pct": 1.5,
+      "risk_cap_pct": 1.35,
       "service": "tradebot_momcont_xau"
     },
     {
@@ -87,28 +87,28 @@
       "name": "USDJPY Chan96 Breakout",
       "instrument": "USD_JPY",
       "mechanism": "96-bar channel breakout, long only, London/New York overlap",
-      "risk_cap_pct": 1.4,
+      "risk_cap_pct": 0.85,
       "service": "tradebot_usdjpy_camp2_chan96"
     },
     {
       "name": "US30 Donchian Breakout",
       "instrument": "US30_USD",
       "mechanism": "Channel breakout with a macro filter, fixed stop and target",
-      "risk_cap_pct": 1.15,
+      "risk_cap_pct": 1.4,
       "service": "tradebot_x_donch_us30"
     },
     {
       "name": "JP225 Chan96 Breakout, closer target",
       "instrument": "JP225_USD",
       "mechanism": "Same entries as the JP225 breakout, closer target",
-      "risk_cap_pct": 2.75,
+      "risk_cap_pct": 2.05,
       "service": "tradebot_jp225_camp2_chan96_tp12"
     },
     {
       "name": "CH20 Rolling Channel",
       "instrument": "CH20_CHF",
       "mechanism": "Channel breakout with a volatility filter, from the NAS100 swing-channel family",
-      "risk_cap_pct": 3.6,
+      "risk_cap_pct": 3.55,
       "service": "tradebot_x_rchan_ch20"
     }
   ],
@@ -646,6 +646,54 @@
       "change": "stopped",
       "system": "momcont_bco",
       "note": "no longer running"
+    },
+    {
+      "date": "2026-09-25",
+      "change": "re-capped",
+      "system": "NAS100 Channel v9",
+      "note": "risk cap 0.8% -> 1%"
+    },
+    {
+      "date": "2026-09-25",
+      "change": "re-capped",
+      "system": "NAS100 Swing Chan",
+      "note": "risk cap 2.2% -> 2.1%"
+    },
+    {
+      "date": "2026-09-25",
+      "change": "re-capped",
+      "system": "NAS100 Vol Brk",
+      "note": "risk cap 4.05% -> 4.15%"
+    },
+    {
+      "date": "2026-09-25",
+      "change": "re-capped",
+      "system": "Gold Momentum Cont",
+      "note": "risk cap 1.5% -> 1.35%"
+    },
+    {
+      "date": "2026-09-25",
+      "change": "re-capped",
+      "system": "USDJPY Chan96 Breakout",
+      "note": "risk cap 1.4% -> 0.85%"
+    },
+    {
+      "date": "2026-09-25",
+      "change": "re-capped",
+      "system": "US30 Donchian Breakout",
+      "note": "risk cap 1.15% -> 1.4%"
+    },
+    {
+      "date": "2026-09-25",
+      "change": "re-capped",
+      "system": "JP225 Chan96 Breakout, closer target",
+      "note": "risk cap 2.75% -> 2.05%"
+    },
+    {
+      "date": "2026-09-25",
+      "change": "re-capped",
+      "system": "CH20 Rolling Channel",
+      "note": "risk cap 3.6% -> 3.55%"
     }
   ]
 }
