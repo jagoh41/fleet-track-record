@@ -1,7 +1,7 @@
 {
-  "pulled_at": "2026-09-25T15:32:30Z",
+  "pulled_at": "2026-09-25T15:47:30Z",
   "source": "Read from the trading host at every refresh: each risk cap comes from the running service's arguments or the config file it loads. Changes are logged with their date.",
-  "count": 20,
+  "count": 21,
   "systems": [
     {
       "name": "DE30 Channel v9",
@@ -146,6 +146,13 @@
       "mechanism": "Channel breakout with a volatility filter, from the NAS100 swing-channel family",
       "risk_cap_pct": 3.6,
       "service": "tradebot_x_rchan_ch20"
+    },
+    {
+      "name": "momcont_bco",
+      "instrument": "BCO_USD",
+      "mechanism": "Not described yet",
+      "risk_cap_pct": 3.65,
+      "service": "tradebot_momcont_bco"
     }
   ],
   "changes": [
@@ -640,6 +647,12 @@
       "change": "stopped",
       "system": "WTICO WTI Trend",
       "note": "no longer running"
+    },
+    {
+      "date": "2026-09-25",
+      "change": "added",
+      "system": "momcont_bco",
+      "note": "added at 3.65%"
     }
   ]
 }
