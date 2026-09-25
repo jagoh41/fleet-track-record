@@ -1,15 +1,8 @@
 {
-  "pulled_at": "2026-09-25T12:17:30Z",
+  "pulled_at": "2026-09-25T12:32:30Z",
   "source": "Read from the trading host at every refresh: each risk cap comes from the running service's arguments or the config file it loads. Changes are logged with their date.",
-  "count": 21,
+  "count": 20,
   "systems": [
-    {
-      "name": "WTICO WTI Trend",
-      "instrument": "WTICO_USD",
-      "mechanism": "Same rule as the Brent system, its own settings",
-      "risk_cap_pct": 0.75,
-      "service": "tradebot_crude_wti"
-    },
     {
       "name": "DE30 Channel v9",
       "instrument": "DE30_EUR",
@@ -640,6 +633,12 @@
       "date": "2026-09-25",
       "change": "stopped",
       "system": "BCO Momentum Cont",
+      "note": "no longer running"
+    },
+    {
+      "date": "2026-09-25",
+      "change": "stopped",
+      "system": "WTICO WTI Trend",
       "note": "no longer running"
     }
   ]
