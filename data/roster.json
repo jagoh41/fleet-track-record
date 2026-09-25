@@ -1,5 +1,5 @@
 {
-  "pulled_at": "2026-09-25T03:32:30Z",
+  "pulled_at": "2026-09-25T03:47:30Z",
   "source": "Read from the trading host at every refresh: each risk cap comes from the running service's arguments or the config file it loads. Changes are logged with their date.",
   "count": 23,
   "systems": [
