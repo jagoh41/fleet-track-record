@@ -1,7 +1,7 @@
 {
-  "pulled_at": "2026-09-25T17:32:30Z",
+  "pulled_at": "2026-09-25T17:47:30Z",
   "source": "Read from the trading host at every refresh: each risk cap comes from the running service's arguments or the config file it loads. Changes are logged with their date.",
-  "count": 21,
+  "count": 20,
   "systems": [
     {
       "name": "DE30 Channel v9",
@@ -88,13 +88,6 @@
       "mechanism": "Momentum continuation",
       "risk_cap_pct": 1.5,
       "service": "tradebot_momcont_xau"
-    },
-    {
-      "name": "XAGUSD POC Short v3",
-      "instrument": "XAG_USD",
-      "mechanism": "Short-only fade at the volume-profile point of control",
-      "risk_cap_pct": 4.75,
-      "service": "tradebot_xagusd_poc_short_v3"
     },
     {
       "name": "USDCAD Capitulation Rev",
@@ -653,6 +646,12 @@
       "change": "added",
       "system": "momcont_bco",
       "note": "added at 3.65%"
+    },
+    {
+      "date": "2026-09-25",
+      "change": "stopped",
+      "system": "XAGUSD POC Short v3",
+      "note": "no longer running"
     }
   ]
 }
