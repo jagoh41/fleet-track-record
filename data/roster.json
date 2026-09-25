@@ -1,15 +1,8 @@
 {
-  "pulled_at": "2026-09-25T19:02:30Z",
+  "pulled_at": "2026-09-25T19:17:30Z",
   "source": "Read from the trading host at every refresh: each risk cap comes from the running service's arguments or the config file it loads. Changes are logged with their date.",
-  "count": 20,
+  "count": 15,
   "systems": [
-    {
-      "name": "DE30 Channel v9",
-      "instrument": "DE30_EUR",
-      "mechanism": "Intraday channel breakout, 1-minute bars",
-      "risk_cap_pct": 0.2,
-      "service": "tradebot_de30_eur_channel_v9"
-    },
     {
       "name": "NAS100 Channel v9",
       "instrument": "NAS100_USD",
@@ -37,20 +30,6 @@
       "mechanism": "Intraday, 5-minute bars",
       "risk_cap_pct": 4.65,
       "service": "tradebot_m5_nas100"
-    },
-    {
-      "name": "NAS100 M1 Short Hold",
-      "instrument": "NAS100_USD",
-      "mechanism": "1-minute entries, short holds",
-      "risk_cap_pct": 1.45,
-      "service": "tradebot_nas100_m1_short_hold"
-    },
-    {
-      "name": "JP225 Chan96 Breakout",
-      "instrument": "JP225_USD",
-      "mechanism": "96-bar channel breakout",
-      "risk_cap_pct": 0.2,
-      "service": "tradebot_jp225_usd_camp2_chan96"
     },
     {
       "name": "MR SPX500 Dip",
@@ -97,14 +76,6 @@
       "service": "tradebot_usdcad_rev"
     },
     {
-      "name": "XAUUSD POC Short v17",
-      "instrument": "XAU_USD",
-      "mechanism": "Short-only fade at volume-profile and prior-day pivot levels",
-      "added": "2026-09-07",
-      "risk_cap_pct": 3.65,
-      "service": "tradebot_xauusd_poc_short_v17"
-    },
-    {
       "name": "Metals Book",
       "instrument": "Gold and silver crosses, copper",
       "mechanism": "Trend following on the gold and silver crosses and copper",
@@ -139,13 +110,6 @@
       "mechanism": "Channel breakout with a volatility filter, from the NAS100 swing-channel family",
       "risk_cap_pct": 3.6,
       "service": "tradebot_x_rchan_ch20"
-    },
-    {
-      "name": "momcont_bco",
-      "instrument": "BCO_USD",
-      "mechanism": "Not described yet",
-      "risk_cap_pct": 3.65,
-      "service": "tradebot_momcont_bco"
     }
   ],
   "changes": [
@@ -651,6 +615,36 @@
       "date": "2026-09-25",
       "change": "stopped",
       "system": "XAGUSD POC Short v3",
+      "note": "no longer running"
+    },
+    {
+      "date": "2026-09-25",
+      "change": "stopped",
+      "system": "DE30 Channel v9",
+      "note": "no longer running"
+    },
+    {
+      "date": "2026-09-25",
+      "change": "stopped",
+      "system": "NAS100 M1 Short Hold",
+      "note": "no longer running"
+    },
+    {
+      "date": "2026-09-25",
+      "change": "stopped",
+      "system": "JP225 Chan96 Breakout",
+      "note": "no longer running"
+    },
+    {
+      "date": "2026-09-25",
+      "change": "stopped",
+      "system": "XAUUSD POC Short v17",
+      "note": "no longer running"
+    },
+    {
+      "date": "2026-09-25",
+      "change": "stopped",
+      "system": "momcont_bco",
       "note": "no longer running"
     }
   ]
