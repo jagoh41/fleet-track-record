@@ -1,15 +1,8 @@
 {
-  "pulled_at": "2026-09-25T11:47:30Z",
+  "pulled_at": "2026-09-25T12:02:30Z",
   "source": "Read from the trading host at every refresh: each risk cap comes from the running service's arguments or the config file it loads. Changes are logged with their date.",
-  "count": 23,
+  "count": 21,
   "systems": [
-    {
-      "name": "BCO Brent Trend",
-      "instrument": "BCO_USD",
-      "mechanism": "10-day breakout, trailing stop",
-      "risk_cap_pct": 0.75,
-      "service": "tradebot_crude_brent"
-    },
     {
       "name": "WTICO WTI Trend",
       "instrument": "WTICO_USD",
@@ -132,13 +125,6 @@
       "risk_cap_pct": 0.95,
       "note": "0.95% per position; the whole book stays under a 25% margin ceiling.",
       "service": "tradebot_metals_book"
-    },
-    {
-      "name": "BCO Momentum Cont",
-      "instrument": "BCO_USD",
-      "mechanism": "Long-only momentum near the 50-day high, time-capped hold",
-      "risk_cap_pct": 3.65,
-      "service": "tradebot_momcont_bco"
     },
     {
       "name": "USDJPY Chan96 Breakout",
@@ -643,6 +629,18 @@
       "change": "stopped",
       "system": "HK33 Cash Short",
       "note": "stopped at 11:21 UTC: it was added as a hedge, but its returns were uncorrelated with the fleet's losing days"
+    },
+    {
+      "date": "2026-09-25",
+      "change": "stopped",
+      "system": "BCO Brent Trend",
+      "note": "no longer running"
+    },
+    {
+      "date": "2026-09-25",
+      "change": "stopped",
+      "system": "BCO Momentum Cont",
+      "note": "no longer running"
     }
   ]
 }
