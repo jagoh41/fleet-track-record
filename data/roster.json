@@ -1,7 +1,7 @@
 {
-  "pulled_at": "2026-09-28T10:47:30Z",
+  "pulled_at": "2026-09-28T11:02:30Z",
   "source": "Read from the trading host at every refresh: each risk cap comes from the running service's arguments or the config file it loads. Changes are logged with their date.",
-  "count": 15,
+  "count": 13,
   "systems": [
     {
       "name": "NAS100 Channel v9",
@@ -69,26 +69,12 @@
       "service": "tradebot_momcont_xau"
     },
     {
-      "name": "USDCAD Capitulation Rev",
-      "instrument": "USD_CAD",
-      "mechanism": "Capitulation reversal",
-      "risk_cap_pct": 2.0,
-      "service": "tradebot_usdcad_rev"
-    },
-    {
       "name": "Metals Book",
       "instrument": "Gold and silver crosses, copper",
       "mechanism": "Trend following on the gold and silver crosses and copper",
       "risk_cap_pct": 0.95,
       "note": "0.95% per position; the whole book stays under a 25% margin ceiling.",
       "service": "tradebot_metals_book"
-    },
-    {
-      "name": "USDJPY Chan96 Breakout",
-      "instrument": "USD_JPY",
-      "mechanism": "96-bar channel breakout, long only, London/New York overlap",
-      "risk_cap_pct": 0.85,
-      "service": "tradebot_usdjpy_camp2_chan96"
     },
     {
       "name": "US30 Donchian Breakout",
@@ -694,6 +680,18 @@
       "change": "re-capped",
       "system": "CH20 Rolling Channel",
       "note": "risk cap 3.6% -> 3.55%"
+    },
+    {
+      "date": "2026-09-28",
+      "change": "stopped",
+      "system": "USDCAD Capitulation Rev",
+      "note": "no longer running"
+    },
+    {
+      "date": "2026-09-28",
+      "change": "stopped",
+      "system": "USDJPY Chan96 Breakout",
+      "note": "no longer running"
     }
   ]
 }
