@@ -1,11 +1,11 @@
 {
   "record_start": "2026-09-06T00:00:00Z",
-  "generated_at": "2026-10-05T13:32:30Z",
+  "generated_at": "2026-10-05T13:47:31Z",
   "currency": "GBP",
   "opening_balance": 2000.0,
   "balance": 1736.61,
-  "nav": 1731.81,
-  "unrealised_pl": -4.8,
+  "nav": 1729.96,
+  "unrealised_pl": -6.65,
   "realised_pl": -239.53,
   "financing": -29.17,
   "closed_trades": 88,
@@ -18,7 +18,7 @@
   "largest_win": 230.72,
   "largest_loss": -99.69,
   "open_trades": 2,
-  "open_unrealised": -4.83,
+  "open_unrealised": -6.63,
   "tagged_trades": 8,
   "capital_flows_in_window": [
     {
@@ -38,6 +38,6 @@
   "capital_contributed": 2000.0,
   "margin_refusals": 39,
   "realised_return_pct_on_opening": -11.98,
-  "nav_return_pct_on_opening": -13.41,
-  "nav_return_pct_on_capital": -13.41
+  "nav_return_pct_on_opening": -13.5,
+  "nav_return_pct_on_capital": -13.5
 }
