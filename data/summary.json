@@ -1,10 +1,10 @@
 {
   "record_start": "2026-09-06T00:00:00Z",
-  "generated_at": "2026-10-16T21:02:30Z",
+  "generated_at": "2026-10-17T21:02:30Z",
   "currency": "GBP",
   "opening_balance": 2000.0,
-  "balance": 2107.9,
-  "nav": 2332.21,
+  "balance": 2107.84,
+  "nav": 2332.14,
   "unrealised_pl": 224.31,
   "realised_pl": 152.1,
   "financing": -51.11,
