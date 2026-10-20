@@ -1,6 +1,6 @@
 {
   "record_start": "2026-09-06T00:00:00Z",
-  "generated_at": "2026-10-20T22:02:30Z",
+  "generated_at": "2026-10-20T22:17:30Z",
   "currency": "GBP",
   "opening_balance": 2000.0,
   "balance": 1994.79,
@@ -18,7 +18,7 @@
   "largest_win": 230.72,
   "largest_loss": -99.69,
   "open_trades": 3,
-  "open_unrealised": 40.18,
+  "open_unrealised": 40.28,
   "tagged_trades": 10,
   "capital_flows_in_window": [
     {
