@@ -1,7 +1,7 @@
 {
-  "pulled_at": "2026-10-20T11:17:30Z",
+  "pulled_at": "2026-10-20T11:32:30Z",
   "source": "Read from the trading host at every refresh: each risk cap comes from the running service's arguments or the config file it loads. Changes are logged with their date.",
-  "count": 13,
+  "count": 14,
   "systems": [
     {
       "name": "NAS100 Channel v9",
@@ -96,6 +96,13 @@
       "mechanism": "Channel breakout with a volatility filter, from the NAS100 swing-channel family",
       "risk_cap_pct": 4.95,
       "service": "tradebot_x_rchan_ch20"
+    },
+    {
+      "name": "usomom_nas",
+      "instrument": "NAS100_USD",
+      "mechanism": "Not described yet",
+      "risk_cap_pct": 2.0,
+      "service": "tradebot_usomom_nas"
     }
   ],
   "changes": [
@@ -734,6 +741,12 @@
       "change": "re-capped",
       "system": "CH20 Rolling Channel",
       "note": "risk cap 3.55% -> 4.95%"
+    },
+    {
+      "date": "2026-10-20",
+      "change": "added",
+      "system": "usomom_nas",
+      "note": "added at 2%"
     }
   ]
 }
