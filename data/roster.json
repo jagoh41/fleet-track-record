@@ -1,7 +1,7 @@
 {
-  "pulled_at": "2026-10-20T18:32:30Z",
+  "pulled_at": "2026-10-20T18:47:30Z",
   "source": "Read from the trading host at every refresh: each risk cap comes from the running service's arguments or the config file it loads. Changes are logged with their date.",
-  "count": 14,
+  "count": 13,
   "systems": [
     {
       "name": "NAS100 Channel v9",
@@ -16,13 +16,6 @@
       "mechanism": "576-bar channel breakout with a volatility filter",
       "risk_cap_pct": 2.9,
       "service": "tradebot_factory_v3_x_swing_chan_nas100"
-    },
-    {
-      "name": "NAS100 Vol Brk",
-      "instrument": "NAS100_USD",
-      "mechanism": "Breakout on a jump in volatility, with a regime filter",
-      "risk_cap_pct": 5.75,
-      "service": "tradebot_factory_v3_x_volbrk_nas100"
     },
     {
       "name": "NAS100 M5",
@@ -747,6 +740,12 @@
       "change": "added",
       "system": "usomom_nas",
       "note": "added at 2%"
+    },
+    {
+      "date": "2026-10-20",
+      "change": "stopped",
+      "system": "NAS100 Vol Brk",
+      "note": "no longer running"
     }
   ]
 }
