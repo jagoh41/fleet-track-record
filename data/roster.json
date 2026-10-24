@@ -1,103 +1,8 @@
 {
-  "pulled_at": "2026-10-23T21:02:30Z",
+  "pulled_at": "2026-10-24T20:17:30Z",
   "source": "Read from the trading host at every refresh: each risk cap comes from the running service's arguments or the config file it loads. Changes are logged with their date.",
-  "count": 13,
-  "systems": [
-    {
-      "name": "NAS100 Channel v9",
-      "instrument": "NAS100_USD",
-      "mechanism": "Channel breakout, 5-minute bars",
-      "risk_cap_pct": 1.4,
-      "service": "tradebot_nas100_usd_channel_v9"
-    },
-    {
-      "name": "NAS100 Swing Chan",
-      "instrument": "NAS100_USD",
-      "mechanism": "576-bar channel breakout with a volatility filter",
-      "risk_cap_pct": 2.9,
-      "service": "tradebot_factory_v3_x_swing_chan_nas100"
-    },
-    {
-      "name": "NAS100 M5",
-      "instrument": "NAS100_USD",
-      "mechanism": "Intraday, 5-minute bars",
-      "risk_cap_pct": 4.65,
-      "service": "tradebot_m5_nas100"
-    },
-    {
-      "name": "MR SPX500 Dip",
-      "instrument": "SPX500_USD",
-      "mechanism": "Buys oversold dips, exits within 7 bars",
-      "risk_cap_pct": 4.9,
-      "service": "tradebot_mr_spx"
-    },
-    {
-      "name": "NL25 EUR",
-      "instrument": "NL25_EUR",
-      "mechanism": "Intraday system on the Dutch index",
-      "risk_cap_pct": 0.35,
-      "service": "tradebot_nl25_eur"
-    },
-    {
-      "name": "VRP",
-      "instrument": "7 indices",
-      "mechanism": "Variance risk premium on NAS100, FR40, UK100, NL25, AU200, JP225 and HK33",
-      "risk_cap_pct": 1.75,
-      "note": "1.75% is shared across all seven indices.",
-      "service": "tradebot_vrp"
-    },
-    {
-      "name": "Gold Trend TSMOM",
-      "instrument": "XAU_USD",
-      "mechanism": "Moving-average trend (10/50, 20/100, 50/200), long only",
-      "risk_cap_pct": null,
-      "note": "No fixed cap: sized to an 8% annual volatility target.",
-      "service": "tradebot_trend_gold"
-    },
-    {
-      "name": "Gold Momentum Cont",
-      "instrument": "XAU_USD",
-      "mechanism": "Momentum continuation",
-      "risk_cap_pct": 1.5,
-      "service": "tradebot_momcont_xau"
-    },
-    {
-      "name": "Metals Book",
-      "instrument": "Gold and silver crosses, copper",
-      "mechanism": "Trend following on the gold and silver crosses and copper",
-      "risk_cap_pct": 0.95,
-      "note": "0.95% per position; the whole book stays under a 25% margin ceiling.",
-      "service": "tradebot_metals_book"
-    },
-    {
-      "name": "US30 Donchian Breakout",
-      "instrument": "US30_USD",
-      "mechanism": "Channel breakout with a macro filter, fixed stop and target",
-      "risk_cap_pct": 1.95,
-      "service": "tradebot_x_donch_us30"
-    },
-    {
-      "name": "JP225 Chan96 Breakout, closer target",
-      "instrument": "JP225_USD",
-      "mechanism": "Same entries as the JP225 breakout, closer target",
-      "risk_cap_pct": 2.85,
-      "service": "tradebot_jp225_camp2_chan96_tp12"
-    },
-    {
-      "name": "CH20 Rolling Channel",
-      "instrument": "CH20_CHF",
-      "mechanism": "Channel breakout with a volatility filter, from the NAS100 swing-channel family",
-      "risk_cap_pct": 4.95,
-      "service": "tradebot_x_rchan_ch20"
-    },
-    {
-      "name": "usomom_nas",
-      "instrument": "NAS100_USD",
-      "mechanism": "Not described yet",
-      "risk_cap_pct": 2.0,
-      "service": "tradebot_usomom_nas"
-    }
-  ],
+  "count": 0,
+  "systems": [],
   "changes": [
     {
       "date": "2026-09-07",
@@ -745,6 +650,84 @@
       "date": "2026-10-20",
       "change": "stopped",
       "system": "NAS100 Vol Brk",
+      "note": "no longer running"
+    },
+    {
+      "date": "2026-10-24",
+      "change": "stopped",
+      "system": "NAS100 Channel v9",
+      "note": "no longer running"
+    },
+    {
+      "date": "2026-10-24",
+      "change": "stopped",
+      "system": "NAS100 Swing Chan",
+      "note": "no longer running"
+    },
+    {
+      "date": "2026-10-24",
+      "change": "stopped",
+      "system": "NAS100 M5",
+      "note": "no longer running"
+    },
+    {
+      "date": "2026-10-24",
+      "change": "stopped",
+      "system": "MR SPX500 Dip",
+      "note": "no longer running"
+    },
+    {
+      "date": "2026-10-24",
+      "change": "stopped",
+      "system": "NL25 EUR",
+      "note": "no longer running"
+    },
+    {
+      "date": "2026-10-24",
+      "change": "stopped",
+      "system": "VRP",
+      "note": "no longer running"
+    },
+    {
+      "date": "2026-10-24",
+      "change": "stopped",
+      "system": "Gold Trend TSMOM",
+      "note": "no longer running"
+    },
+    {
+      "date": "2026-10-24",
+      "change": "stopped",
+      "system": "Gold Momentum Cont",
+      "note": "no longer running"
+    },
+    {
+      "date": "2026-10-24",
+      "change": "stopped",
+      "system": "Metals Book",
+      "note": "no longer running"
+    },
+    {
+      "date": "2026-10-24",
+      "change": "stopped",
+      "system": "US30 Donchian Breakout",
+      "note": "no longer running"
+    },
+    {
+      "date": "2026-10-24",
+      "change": "stopped",
+      "system": "JP225 Chan96 Breakout, closer target",
+      "note": "no longer running"
+    },
+    {
+      "date": "2026-10-24",
+      "change": "stopped",
+      "system": "CH20 Rolling Channel",
+      "note": "no longer running"
+    },
+    {
+      "date": "2026-10-24",
+      "change": "stopped",
+      "system": "usomom_nas",
       "note": "no longer running"
     }
   ]
