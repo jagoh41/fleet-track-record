@@ -1,10 +1,10 @@
 {
   "record_start": "2026-09-06T00:00:00Z",
-  "generated_at": "2026-10-24T20:17:30Z",
+  "generated_at": "2026-10-24T21:02:30Z",
   "currency": "GBP",
   "opening_balance": 2000.0,
-  "balance": 2127.55,
-  "nav": 2127.55,
+  "balance": 2127.47,
+  "nav": 2127.48,
   "unrealised_pl": 0.01,
   "realised_pl": 171.51,
   "financing": -49.67,
@@ -38,6 +38,6 @@
   "capital_contributed": 2000.0,
   "margin_refusals": 39,
   "realised_return_pct_on_opening": 8.58,
-  "nav_return_pct_on_opening": 6.38,
-  "nav_return_pct_on_capital": 6.38
+  "nav_return_pct_on_opening": 6.37,
+  "nav_return_pct_on_capital": 6.37
 }
