@@ -1,10 +1,10 @@
 {
   "record_start": "2026-09-06T00:00:00Z",
-  "generated_at": "2026-10-27T20:32:30Z",
+  "generated_at": "2026-10-29T17:17:30Z",
   "currency": "GBP",
   "opening_balance": 2000.0,
-  "balance": 2000.01,
-  "nav": 2000.01,
+  "balance": 1900.01,
+  "nav": 1900.01,
   "unrealised_pl": 0.0,
   "realised_pl": 174.23,
   "financing": -49.9,
@@ -38,12 +38,18 @@
       "amount": -130.04,
       "reason": "CLIENT_FUNDING",
       "in_window": true
+    },
+    {
+      "time": "2026-10-29T17:07:17Z",
+      "amount": -100.0,
+      "reason": "CLIENT_FUNDING",
+      "in_window": true
     }
   ],
-  "net_capital_flows_in_window": -130.04,
-  "capital_contributed": 1869.96,
+  "net_capital_flows_in_window": -230.04,
+  "capital_contributed": 1769.96,
   "margin_refusals": 39,
   "realised_return_pct_on_opening": 8.71,
   "nav_return_pct_on_opening": 6.5,
-  "nav_return_pct_on_capital": 6.95
+  "nav_return_pct_on_capital": 7.35
 }
